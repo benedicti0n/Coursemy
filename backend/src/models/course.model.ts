@@ -1,12 +1,11 @@
 import mongoose, { Schema, Types } from "mongoose"
-import User from "./user.model";
 
 interface Course {
     name: string;
-    bannerPicture: string;
-    description: string;
+    bannerPicture?: string;
+    description?: string;
     price: number;
-    createdBy: Types.ObjectId[] | User[];
+    createdBy: Types.ObjectId[];
     content: string[];
     totalSold: number;
 }
@@ -24,7 +23,8 @@ const courseSchema = new Schema<Course>({
     },
     price: {
         type: Number,
-        required: true
+        required: true,
+        min: 0
     },
     createdBy: [{
         type: mongoose.Schema.Types.ObjectId,

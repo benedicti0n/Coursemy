@@ -1,16 +1,14 @@
 import mongoose, { Schema, Types } from "mongoose"
 
-import Course from "./course.model.ts"
-
 interface User {
     name: string;
     username: string;
     email: string;
     password: string;
-    profilePicture: string;
+    profilePicture?: string;
     role: "creator" | "learner";
-    coursesBought: Types.ObjectId[] | Course[];
-    coursesCreated: Types.ObjectId[] | Course[]
+    coursesBought: Types.ObjectId[];
+    coursesCreated: Types.ObjectId[];
 }
 
 const userSchema = new Schema<User>({
@@ -20,11 +18,14 @@ const userSchema = new Schema<User>({
     },
     username: {
         type: String,
-        required: true
+        required: true,
+        unique: true,
     },
     email: {
         type: String,
-        required: true
+        required: true,
+        unique: true,
+        lowercase: true,
     },
     password: {
         type: String,
