@@ -1,16 +1,52 @@
 import { useForm } from "react-hook-form"
 import { useState } from "react"
-import { v2 as cloudinary } from "cloudinary"
 import axios from "axios"
 
+const serverUrl: string = import.meta.env.SERVER_URL as string || "http://localhost:8080"
+
+interface FormData {
+    name: string;
+    username: string;
+    email: string;
+    password: string;
+    role: "learner" | "creator";
+}
+
 const SignUpForm = () => {
-    const { handleSubmit, register } = useForm()
-    const [selectedImage, setSelectedImage] = useState<string | null>(null)
+    const { handleSubmit, register } = useForm<FormData>()
+    const [selectedImage, setSelectedImage] = useState<File | null>(null)
+    const [selectedImagePreview, setselectedImagePreview] = useState<string>("")
+
+    const onSubmit = handleSubmit((data) => {
+        const formData = new FormData()
+
+        formData.append("name", data.name)
+        formData.append("username", data.username)
+        formData.append("email", data.email)
+        formData.append("password", data.password)
+        formData.append("role", data.role)
+        if (selectedImage) {
+            formData.append("profilePicture", selectedImage)
+        }
+
+        console.log(formData);
+
+
+        axios.post(`${serverUrl}/api/v1/user/signUp`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        })
+            .then(res => {
+                console.log(res.data);
+            })
+            .catch(err => {
+                console.error(err);
+            })
+    })
 
     return (
-        <form onSubmit={handleSubmit((data) => {
-            axios.post("https://localhost:8080/api/signUp", data)
-        })} className="max-w-md mx-auto mt-8 p-6 bg-white rounded-lg shadow-md">
+        <form encType="multipart/form-data" onSubmit={onSubmit} className="max-w-md mx-auto mt-8 p-6 bg-white rounded-lg shadow-md">
             <div className="space-y-4">
                 <input
                     {...register("name")}
@@ -38,11 +74,11 @@ const SignUpForm = () => {
                 <div className="relative">
                     <input
                         type="file"
-                        {...register("profilePicture")}
                         accept="image/*"
                         onChange={(e) => {
                             if (e.target.files?.[0]) {
-                                setSelectedImage(URL.createObjectURL(e.target.files[0]))
+                                setSelectedImage(e.target.files[0])
+                                setselectedImagePreview(URL.createObjectURL(e.target.files[0]))
                             }
                         }}
                         className="hidden"
@@ -53,7 +89,7 @@ const SignUpForm = () => {
                         className="flex flex-col items-center justify-center w-full p-4 border-2 border-dashed border-gray-300 rounded-md cursor-pointer hover:bg-gray-50"
                     >
                         {selectedImage ? (
-                            <img src={selectedImage} alt="Preview" className="w-32 h-32 object-cover rounded-full" />
+                            <img src={selectedImagePreview} alt="Preview" className="w-32 h-32 object-cover rounded-full" />
                         ) : (
                             <>
                                 <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
