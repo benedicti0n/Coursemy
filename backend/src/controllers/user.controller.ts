@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import bcrypt from "bcrypt"
 import cloudinary from "../utils/cloudinary";
 import User from "../models/user.model";
+
 export const handleSignUp = async (req: Request, res: Response) => {
     try {
         const data = req.body;
@@ -29,5 +30,22 @@ export const handleSignUp = async (req: Request, res: Response) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Error during signup' });
+    }
+}
+
+export const handleLogin = async (req: Request, res: Response) => {
+    try {
+        const { username, password } = req.body;
+
+        const userDetails = await User.findOne({ username }, "username password")
+
+        console.log(userDetails);
+
+        const passwordMatched = await bcrypt.compare(password, userDetails!.password)
+
+        console.log(passwordMatched);
+
+    } catch (error) {
+        console.error(error);
     }
 }
