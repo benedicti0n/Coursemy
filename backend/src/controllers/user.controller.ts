@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import bcrypt from "bcrypt"
+import jwt from "jsonwebtoken";
 import cloudinary from "../utils/cloudinary";
 import User from "../models/user.model";
 
@@ -34,18 +35,35 @@ export const handleSignUp = async (req: Request, res: Response) => {
 }
 
 export const handleLogin = async (req: Request, res: Response) => {
+    interface IUserDetails {
+        username: string;
+        password: string;
+    }
+
     try {
         const { username, password } = req.body;
 
-        const userDetails = await User.findOne({ username }, "username password")
-
-        console.log(userDetails);
+        const userDetails = await User.findOne({ username }, "username password") as IUserDetails | null
+        //NOTE: this line causing error
+        // if (!userDetails) {
+        //     console.error('Login attempt with non-existing username:', username);
+        //     return res.status(401).json({ error: 'No account found' });
+        // }
 
         const passwordMatched = await bcrypt.compare(password, userDetails!.password)
 
-        console.log(passwordMatched);
+        if (!passwordMatched) {
+            res.status(401).json({ message: "Authentication failed" })
+        }
 
-    } catch (error) {
-        console.error(error);
+        const secretKey: string = process.env.JWT_SECRET_KEY as string;
+
+        const token = jwt.sign({ username: username }, secretKey, { expiresIn: '1h' })
+        console.log(token);
+
+        res.status(200).json({ token })
+    }
+    catch (error) {
+        res.status(500).json({ error: 'Login Failed' })
     }
 }
