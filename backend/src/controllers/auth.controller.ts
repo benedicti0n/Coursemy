@@ -9,6 +9,12 @@ export const handleSignUp = async (req: Request, res: Response) => {
         const data = req.body;
         const profilePicture = req.file;
 
+        const existingEmail = await User.findOne({ email: data.email })
+
+        if (existingEmail) {
+            res.status(409).json({ message: "User already exists. Log in please." })
+        }
+
         const saltRounds = 10
         const plainPassword = data.password
         const hashedPassword = await bcrypt.hash(plainPassword, saltRounds)
@@ -23,7 +29,6 @@ export const handleSignUp = async (req: Request, res: Response) => {
             profilePicture: result.secure_url,
             role: data.role,
         })
-        console.log(user);
 
         await user.save()
 
@@ -36,6 +41,7 @@ export const handleSignUp = async (req: Request, res: Response) => {
 
 export const handleLogin = async (req: Request, res: Response) => {
     interface IUserDetails {
+        _id: string;
         username: string;
         password: string;
     }
@@ -43,12 +49,12 @@ export const handleLogin = async (req: Request, res: Response) => {
     try {
         const { username, password } = req.body;
 
-        const userDetails = await User.findOne({ username }, "username password") as IUserDetails | null
-        //NOTE: this line causing error
-        // if (!userDetails) {
-        //     console.error('Login attempt with non-existing username:', username);
-        //     return res.status(401).json({ error: 'No account found' });
-        // }
+        const userDetails = await User.findOne({ username }, "_id username password") as IUserDetails | null
+
+        if (!userDetails) {
+            console.error('Login attempt with non-existing username:', username);
+            res.status(401).json({ error: 'No account found' });
+        }
 
         const passwordMatched = await bcrypt.compare(password, userDetails!.password)
 
@@ -58,7 +64,7 @@ export const handleLogin = async (req: Request, res: Response) => {
 
         const secretKey: string = process.env.JWT_SECRET_KEY as string;
 
-        const token = jwt.sign({ username: username }, secretKey, { expiresIn: '1h' })
+        const token = jwt.sign({ userId: userDetails!._id }, secretKey, { expiresIn: '1h' })
         console.log(token);
 
         res.status(200).json({ token })
