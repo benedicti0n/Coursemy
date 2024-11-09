@@ -1,7 +1,8 @@
-import { useForm } from "react-hook-form"
+import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
 import axios from "axios";
 
-const serverUrl: string = import.meta.env.SERVER_URL as string || "http://localhost:8080"
+const serverUrl: string = import.meta.env.VITE_SERVER_URL || "http://localhost:8080";
 
 interface FormData {
     username: string;
@@ -9,19 +10,18 @@ interface FormData {
 }
 
 const LoginForm = () => {
-    const { handleSubmit, register } = useForm<FormData>()
-
-    const onSubmit = handleSubmit((data) => {
-        //NOTE: do not need formdata here. Formdata is used for file uploads. for simple text fields we can send the data object directly
-
-        axios.post(`${serverUrl}/api/v1/user/login`, data)
-            .then(res => {
-                console.log(res.data);
-            })
-            .catch(err => {
-                console.error(err);
-            })
-    })
+    const { handleSubmit, register } = useForm<FormData>();
+    const navigate = useNavigate()
+    const onSubmit = handleSubmit(async (data) => {
+        try {
+            const response = await axios.post(`${serverUrl}/api/v1/auth/login`, data);
+            const token = response.data.token;
+            localStorage.setItem("token", token);
+            navigate("/feed")
+        } catch (error) {
+            console.error("Login failed:", error);
+        }
+    });
 
     return (
         <form onSubmit={onSubmit} className="max-w-md mx-auto mt-8 p-6 bg-white rounded-lg shadow-md">
@@ -45,7 +45,7 @@ const LoginForm = () => {
                 </button>
             </div>
         </form>
-    )
-}
+    );
+};
 
-export default LoginForm
+export default LoginForm;

@@ -3,6 +3,7 @@ import express, { Express, Request, Response } from "express"
 import cors from "cors"
 import connectDB from "./db/connectDb"
 
+import authRoutes from "./routes/auth.routes"
 import userRoutes from "./routes/user.routes"
 
 dotenv.config()
@@ -21,6 +22,7 @@ app.use(express.urlencoded({ extended: true }))
 
 connectDB()
 
+app.use("/api/v1/auth", authRoutes)
 app.use("/api/v1/user", userRoutes)
 
 app.get("/", (req: Request, res: Response) => {
