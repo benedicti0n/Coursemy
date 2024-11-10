@@ -9,6 +9,11 @@ interface cloudinaryConfig {
     api_secret: string;
 }
 
+// console.log(process.env.CLOUD_NAME);
+// console.log(process.env.API_KEY);
+// console.log(process.env.API_SECRET);
+
+
 if (!process.env.CLOUD_NAME || !process.env.API_KEY || process.env.API_SECRET) {
     console.log("Cloudinary Credentials error");
 }

@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 interface NavbarProps {
     isAuthenticated: boolean;
-    profilePicture?: string;
+    profilePicture?: string | undefined;
     onLogout: () => void;
 }
 
@@ -17,8 +17,6 @@ const Navbar: React.FC<NavbarProps> = ({ isAuthenticated, profilePicture, onLogo
 
     const handleLogout = () => {
         onLogout();
-        setIsDropdownOpen(false);
-        navigate('/');
     };
 
     return (
@@ -80,7 +78,6 @@ const Navbar: React.FC<NavbarProps> = ({ isAuthenticated, profilePicture, onLogo
                             Log In
                         </button>
                     </div>
-
                 )}
             </div>
         </nav>

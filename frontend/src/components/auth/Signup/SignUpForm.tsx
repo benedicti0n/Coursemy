@@ -50,15 +50,6 @@ const SignUpForm = () => {
                 console.error("Signup failed:", error);
             }
         }
-
-
-
-        //TODO: Tostify this
-        if (!result) {
-            navigate("/login")
-        }
-
-        console.error(result.status);
     })
 
     return (

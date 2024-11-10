@@ -8,9 +8,7 @@ declare module 'express' {
 }
 
 export const verifyToken = (req: Request, res: Response, next: NextFunction): void => {
-    console.log('Headers:', req.headers);
     const authHeader = req.header("Authorization");
-    console.log('Auth header:', authHeader);
 
     if (!authHeader) {
         res.status(401).json({ error: "Access Denied" });
