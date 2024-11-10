@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import checkToken from '../../util/checkToken';
 
 interface IUserDetails {
     profilePicture?: string;
@@ -14,20 +15,19 @@ const serverUrl: string = import.meta.env.VITE_SERVER_URL || "http://localhost:8
 
 const Profile: React.FC = () => {
     const [userDetails, setUserDetails] = useState<IUserDetails | null>(null);
+    const [isCreator, setIsCreator] = useState<Boolean>(false)
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchProfileDetails = async () => {
             try {
-                const token = localStorage.getItem('token');
-                console.log('Token:', token); // Check if token exists
+                const token = checkToken()
 
                 if (!token) {
                     setError('No authentication token found');
                     return;
                 }
 
-                console.log('Making request to:', `${serverUrl}/api/v1/user/profile`);
                 const response = await axios.get<IUserDetails>(
                     `${serverUrl}/api/v1/user/profile`,
                     {
@@ -47,6 +47,34 @@ const Profile: React.FC = () => {
 
         fetchProfileDetails();
     }, []);
+
+    const becomeCreator = async () => {
+        try {
+            const token = checkToken()
+
+            if (!token) {
+                setError("No auth token found")
+                return
+            }
+
+            const result = await axios.post(`${serverUrl}/api/v1/user/profile`, {},
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                })
+
+            if (result.status === 409) {
+                console.log("Error changing the role");
+                return
+            }
+
+            setIsCreator(true)
+
+        } catch (error) {
+            console.error(error);
+        }
+    }
 
 
     if (error) {
@@ -71,7 +99,12 @@ const Profile: React.FC = () => {
                 </div>
             </div>
             <p className="text-lg font-medium mb-4">Email: {userDetails.email}</p>
-            <p className="text-lg font-medium mb-4">Role: {userDetails.role}</p>
+            {isCreator ? (
+                <p className="text-lg font-medium mb-4">Role: Creator</p>
+            ) : (
+                <p className="text-lg font-medium mb-4">Role: Learner</p>
+            )}
+            <button onClick={becomeCreator}>Become a creator?</button>
             <h2 className="text-2xl font-semibold mb-4">Courses Bought</h2>
             <ul className="list-disc ml-8">
                 {userDetails.coursesBought.map((course, index) => (

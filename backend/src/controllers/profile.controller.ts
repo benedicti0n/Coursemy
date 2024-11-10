@@ -17,3 +17,21 @@ export const fetchProfileDetails = async (req: Request, res: Response): Promise<
         res.status(500).json({ message: "Error fetching details" })
     }
 }
+
+export const becomeCreator = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const userId = req._id
+        console.log(userId);
+
+        const response = await User.findByIdAndUpdate(userId, { role: "creator" })
+
+        if (!response) {
+            res.status(409).json({ mesage: "Error changing role" })
+            return
+        }
+
+        res.status(200).json({ message: "Role changes to creator." })
+    } catch (error) {
+        res.status(500).json({ message: "Error changing the data" })
+    }
+}
