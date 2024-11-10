@@ -9,14 +9,16 @@ export const handleSignUp = async (req: Request, res: Response) => {
         const data = req.body;
         const profilePicture = req.file;
 
-        const existingEmail = await User.findOne({ email: data.email })
+        const existingUser = await User.findOne({ email: data.email })
 
-        if (existingEmail) {
+        if (!!existingUser) {
             res.status(409).json({ message: "User already exists. Log in please." })
+            return
         }
 
         const saltRounds = 10
         const plainPassword = data.password
+
         const hashedPassword = await bcrypt.hash(plainPassword, saltRounds)
 
         const result = await cloudinary.uploader.upload(profilePicture!.path)

@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form"
 import { useState } from "react"
 import axios from "axios"
+import { useNavigate } from "react-router-dom";
 
 const serverUrl: string = import.meta.env.SERVER_URL as string || "http://localhost:8080"
 
@@ -17,7 +18,9 @@ const SignUpForm = () => {
     const [selectedImage, setSelectedImage] = useState<File | null>(null)
     const [selectedImagePreview, setselectedImagePreview] = useState<string>("")
 
-    const onSubmit = handleSubmit((data) => {
+    const navigate = useNavigate()
+
+    const onSubmit = handleSubmit(async (data) => {
         const formData = new FormData()
 
         formData.append("name", data.name)
@@ -29,20 +32,33 @@ const SignUpForm = () => {
             formData.append("profilePicture", selectedImage)
         }
 
-        console.log(formData);
+        try {
+            const result = await axios.post(`${serverUrl}/api/v1/auth/signUp`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
 
+            console.log(result);
 
-        axios.post(`${serverUrl}/api/v1/user/signUp`, formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
+            navigate("/login")
+        } catch (error) {
+            if (axios.isAxiosError(error) && error.response?.status === 409) {
+                console.error("User already exists:", error.response.data.message);
+                navigate("/login")
+            } else {
+                console.error("Signup failed:", error);
             }
-        })
-            .then(res => {
-                console.log(res.data);
-            })
-            .catch(err => {
-                console.error(err);
-            })
+        }
+
+
+
+        //TODO: Tostify this
+        if (!result) {
+            navigate("/login")
+        }
+
+        console.error(result.status);
     })
 
     return (
