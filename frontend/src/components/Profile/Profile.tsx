@@ -38,6 +38,10 @@ const Profile: React.FC = () => {
                 );
                 console.log('Response:', response.data);
                 setUserDetails(response.data);
+
+                if (response.data.role === "creator") {
+                    setIsCreator(true)
+                }
             } catch (error: any) {
                 console.error('Error details:', error.response?.data || error.message);
                 setError('Failed to fetch profile details');
