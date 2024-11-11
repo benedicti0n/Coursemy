@@ -5,6 +5,7 @@ import connectDB from "./db/connectDb"
 
 import authRoutes from "./routes/auth.routes"
 import userRoutes from "./routes/user.routes"
+import courseRoutes from "./routes/course.routes"
 
 dotenv.config()
 
@@ -24,6 +25,7 @@ connectDB()
 
 app.use("/api/v1/auth", authRoutes)
 app.use("/api/v1/user", userRoutes)
+app.use("/api/v1/course", courseRoutes)
 
 app.get("/", (req: Request, res: Response) => {
     res.send("hello")
