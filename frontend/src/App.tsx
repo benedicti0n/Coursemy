@@ -7,6 +7,7 @@ import HomePage from './components/Homepage/Homepage';
 import Feed from './components/Feed/Feed';
 import Course from './components/Course/Course';
 import Profile from './components/Profile/Profile';
+import CourseForm from './components/Course/CourseForm';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -38,6 +39,7 @@ function App() {
         <Route path="/signup" element={<SignUpForm />} />
         <Route path="/login" element={<LoginForm />} />
         <Route path="/feed" element={<Feed />} />
+        <Route path="/createCourse" element={<CourseForm />} />
         <Route path="/course/:id" element={<Course
           name="Course Name"
           bannerPicture="https://via.placeholder.com/300"
