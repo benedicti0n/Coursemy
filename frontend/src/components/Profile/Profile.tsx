@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import checkToken from '../../util/checkToken';
+import { useNavigate } from 'react-router-dom';
 
 interface IUserDetails {
     profilePicture?: string;
@@ -17,6 +18,8 @@ const Profile: React.FC = () => {
     const [userDetails, setUserDetails] = useState<IUserDetails | null>(null);
     const [isCreator, setIsCreator] = useState<Boolean>(false)
     const [error, setError] = useState<string | null>(null);
+
+    const navigate = useNavigate()
 
     useEffect(() => {
         const fetchProfileDetails = async () => {
@@ -80,6 +83,10 @@ const Profile: React.FC = () => {
         }
     }
 
+    const navigateToCreateCourse = () => {
+        navigate("/createCourse")
+    }
+
 
     if (error) {
         return <div className="p-8 text-red-600">{error}</div>;
@@ -90,26 +97,31 @@ const Profile: React.FC = () => {
     }
 
     return (
-        <div className="p-8 bg-gray-50 min-h-screen">
-            <div className="flex items-center mb-6">
+        <div className="p-8 bg-gray-50 min-h-screen flex flex-col items-center">
+            <div className="flex items-center mb-6 border-b-2 border-gray-300 pb-4">
                 <img
                     src={userDetails.profilePicture}
                     alt="Profile"
-                    className="w-24 h-24 rounded-full mr-6"
+                    className="w-24 h-24 rounded-full mr-6 shadow-lg"
                 />
                 <div>
-                    <h1 className="text-3xl font-semibold">{userDetails.name}</h1>
+                    <h1 className="text-3xl font-semibold text-gray-800">{userDetails.name}</h1>
                     <p className="text-gray-600">@{userDetails.username}</p>
                 </div>
             </div>
-            <p className="text-lg font-medium mb-4">Email: {userDetails.email}</p>
+            <p className="text-lg font-medium mb-4 text-gray-700">Email: {userDetails.email}</p>
             {isCreator ? (
-                <p className="text-lg font-medium mb-4">Role: Creator</p>
+                <div className="mb-4">
+                    <p className="text-lg font-medium mb-2 text-green-600">Role: Creator</p>
+                    <button onClick={navigateToCreateCourse} className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">
+                        Create a course
+                    </button>
+                </div>
             ) : (
-                <p className="text-lg font-medium mb-4">Role: Learner</p>
+                <p className="text-lg font-medium mb-4 text-red-600">Role: Learner</p>
             )}
-            <button onClick={becomeCreator}>Become a creator?</button>
-            <h2 className="text-2xl font-semibold mb-4">Courses Bought</h2>
+            {!isCreator && <button onClick={becomeCreator} className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition">Become a creator?</button>}
+            <h2 className="text-2xl font-semibold mb-4 text-gray-800">Courses Bought</h2>
             <ul className="list-disc ml-8">
                 {userDetails.coursesBought.map((course, index) => (
                     <li key={index} className="text-gray-700">{course}</li>
