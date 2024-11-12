@@ -6,8 +6,7 @@ declare module 'express' {
         _id?: string;
     }
 }
-
-export const verifyToken = (req: Request, res: Response, next: NextFunction): void => {
+const verifyToken = (req: Request, res: Response, next: NextFunction): void => {
     const authHeader = req.header("Authorization");
 
     if (!authHeader) {
@@ -33,3 +32,6 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction): vo
         return;
     }
 };
+
+
+export default verifyToken
