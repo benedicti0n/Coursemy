@@ -2,7 +2,7 @@ import { Request, Response } from "express"
 import Course from "../models/course.model"
 import cloudinary from "../utils/cloudinary"
 
-const createCourse = async (req: Request, res: Response) => {
+export const createCourse = async (req: Request, res: Response) => {
     try {
         const formData = req.body
         const bannerPicture = req.file
@@ -30,4 +30,10 @@ const createCourse = async (req: Request, res: Response) => {
     }
 }
 
-export default createCourse
+export const getAllCourses = async (req: Request, res: Response) => {
+    try {
+
+    } catch (error) {
+
+    }
+}
