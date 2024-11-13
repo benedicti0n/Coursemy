@@ -1,11 +1,16 @@
 import mongoose, { Schema, Types } from "mongoose"
+import { stringify } from "querystring";
 
+interface Creator {
+    userId: Types.ObjectId;
+    name: string;
+}
 interface Course {
     name: string;
     bannerPicture?: string;
     description?: string;
     price: number;
-    createdBy: Types.ObjectId[];
+    createdBy: Course[];
     content: string[];
     totalSold: number;
 }
@@ -27,8 +32,14 @@ const courseSchema = new Schema<Course>({
         min: 0
     },
     createdBy: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+        userId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User"
+        },
+        name: {
+            type: String,
+            required: true
+        }
     }],
     content: [{
         type: String
