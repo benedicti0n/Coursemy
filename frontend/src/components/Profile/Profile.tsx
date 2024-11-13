@@ -1,6 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import checkToken from '../../util/checkToken';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 interface IUserDetails {
@@ -8,85 +6,24 @@ interface IUserDetails {
     name: string;
     username: string;
     email: string;
-    role: "creator" | "learner";
+    role: 'creator' | 'learner';
     coursesBought: string[];
 }
 
-const serverUrl: string = import.meta.env.VITE_SERVER_URL || "http://localhost:8080";
+interface ProfileProps {
+    userDetails: IUserDetails | null;
+}
 
-const Profile: React.FC = () => {
-    const [userDetails, setUserDetails] = useState<IUserDetails | null>(null);
-    const [isCreator, setIsCreator] = useState<boolean>(false);
-    const [error, setError] = useState<string | null>(null);
-
+const Profile: React.FC<ProfileProps> = ({ userDetails }) => {
     const navigate = useNavigate();
-
-    useEffect(() => {
-        const fetchProfileDetails = async () => {
-            try {
-                const token = checkToken();
-                if (!token) {
-                    setError('No authentication token found');
-                    return;
-                }
-
-                const response = await axios.get<IUserDetails>(`${serverUrl}/api/v1/user/profile`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
-
-                setUserDetails(response.data);
-                setIsCreator(response.data.role === "creator");
-            } catch (error: any) {
-                console.error('Error details:', error.response?.data || error.message);
-                setError('Failed to fetch profile details');
-            }
-        };
-
-        fetchProfileDetails();
-    }, []);
-
-    const becomeCreator = async () => {
-        try {
-            const token = checkToken();
-            if (!token) {
-                setError("No authentication token found");
-                return;
-            }
-
-            const result = await axios.post(
-                `${serverUrl}/api/v1/user/profile`,
-                {},
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
-
-            if (result.status === 409) {
-                console.log("Error changing the role");
-                return;
-            }
-
-            setIsCreator(true);
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    const navigateToCreateCourse = () => {
-        navigate("/createCourse");
-    };
-
-    if (error) {
-        return <div className="p-8 text-red-500">{error}</div>;
-    }
 
     if (!userDetails) {
         return <div className="p-8 text-gray-500">Loading...</div>;
     }
+
+    const navigateToCreateCourse = () => {
+        navigate('/createCourse');
+    };
 
     return (
         <div className="p-8 bg-gray-100 min-h-screen flex flex-col items-center">
@@ -102,10 +39,10 @@ const Profile: React.FC = () => {
 
             <div className="bg-white rounded-lg shadow-lg p-6 mb-6 w-full max-w-lg text-center">
                 <p className="text-gray-700">Email: {userDetails.email}</p>
-                <p className={`text-lg font-medium mt-4 ${isCreator ? 'text-blue-600' : 'text-gray-500'}`}>
-                    Role: {isCreator ? 'Creator' : 'Learner'}
+                <p className={`text-lg font-medium mt-4 ${userDetails.role === 'creator' ? 'text-blue-600' : 'text-gray-500'}`}>
+                    Role: {userDetails.role === 'creator' ? 'Creator' : 'Learner'}
                 </p>
-                {isCreator ? (
+                {userDetails.role === 'creator' ? (
                     <button
                         onClick={navigateToCreateCourse}
                         className="mt-4 w-full border border-blue-500 text-blue-500 rounded-lg py-2 hover:bg-blue-50 transition-colors"
@@ -113,12 +50,7 @@ const Profile: React.FC = () => {
                         Create a Course
                     </button>
                 ) : (
-                    <button
-                        onClick={becomeCreator}
-                        className="mt-4 w-full border border-gray-500 text-gray-600 rounded-lg py-2 hover:bg-gray-100 transition-colors"
-                    >
-                        Become a Creator?
-                    </button>
+                    <p className="text-gray-500">You are a learner. Explore more courses!</p>
                 )}
             </div>
 
