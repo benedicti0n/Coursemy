@@ -40,8 +40,10 @@ export const createCourse = async (req: Request, res: Response) => {
 
 export const getAllCourses = async (req: Request, res: Response) => {
     try {
-        const allCourses = await Course.find({}, "name")
-    } catch (error) {
+        const allCourses = await Course.find({}, "_id bannerPicture name createdBy totalSold price")
 
+        res.status(200).json(allCourses)
+    } catch (error) {
+        console.error(error);
     }
 }
