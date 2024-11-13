@@ -41,9 +41,9 @@ const courseSchema = new Schema<Course>({
             required: true
         }
     }],
-    content: [{
-        type: String
-    }],
+    content: {
+        type: [String]
+    },
     totalSold: {
         type: Number,
         default: 0

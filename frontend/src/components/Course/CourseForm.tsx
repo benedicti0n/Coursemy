@@ -33,6 +33,8 @@ const CourseForm = () => {
         formData.append("name", data.name)
         formData.append("description", data.description)
         formData.append("price", data.price.toString())
+        console.log(data.content);
+
         formData.append("content", JSON.stringify(data.content))
 
         if (selectedImage) {
