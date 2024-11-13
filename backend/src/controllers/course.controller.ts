@@ -27,8 +27,6 @@ export const createCourse = async (req: Request, res: Response) => {
             }
         })
 
-        console.log(course);
-
         await course.save()
 
         console.log("Course created successfully");
