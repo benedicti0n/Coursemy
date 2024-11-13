@@ -16,117 +16,126 @@ const serverUrl: string = import.meta.env.VITE_SERVER_URL || "http://localhost:8
 
 const Profile: React.FC = () => {
     const [userDetails, setUserDetails] = useState<IUserDetails | null>(null);
-    const [isCreator, setIsCreator] = useState<Boolean>(false)
+    const [isCreator, setIsCreator] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchProfileDetails = async () => {
             try {
-                const token = checkToken()
-
+                const token = checkToken();
                 if (!token) {
                     setError('No authentication token found');
                     return;
                 }
 
-                const response = await axios.get<IUserDetails>(
-                    `${serverUrl}/api/v1/user/profile`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`
-                        }
-                    }
-                );
-                console.log('Response:', response.data);
-                setUserDetails(response.data);
+                const response = await axios.get<IUserDetails>(`${serverUrl}/api/v1/user/profile`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
 
-                if (response.data.role === "creator") {
-                    setIsCreator(true)
-                }
+                setUserDetails(response.data);
+                setIsCreator(response.data.role === "creator");
             } catch (error: any) {
                 console.error('Error details:', error.response?.data || error.message);
                 setError('Failed to fetch profile details');
             }
         };
 
-
         fetchProfileDetails();
     }, []);
 
     const becomeCreator = async () => {
         try {
-            const token = checkToken()
-
+            const token = checkToken();
             if (!token) {
-                setError("No auth token found")
-                return
+                setError("No authentication token found");
+                return;
             }
 
-            const result = await axios.post(`${serverUrl}/api/v1/user/profile`, {},
+            const result = await axios.post(
+                `${serverUrl}/api/v1/user/profile`,
+                {},
                 {
                     headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                })
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
 
             if (result.status === 409) {
                 console.log("Error changing the role");
-                return
+                return;
             }
 
-            setIsCreator(true)
-
+            setIsCreator(true);
         } catch (error) {
             console.error(error);
         }
-    }
+    };
 
     const navigateToCreateCourse = () => {
-        navigate("/createCourse")
-    }
-
+        navigate("/createCourse");
+    };
 
     if (error) {
-        return <div className="p-8 text-red-600">{error}</div>;
+        return <div className="p-8 text-red-500">{error}</div>;
     }
 
     if (!userDetails) {
-        return <div className="p-8">Loading...</div>;
+        return <div className="p-8 text-gray-500">Loading...</div>;
     }
 
     return (
-        <div className="p-8 bg-gray-50 min-h-screen flex flex-col items-center">
-            <div className="flex items-center mb-6 border-b-2 border-gray-300 pb-4">
+        <div className="p-8 bg-gray-100 min-h-screen flex flex-col items-center">
+            <div className="flex flex-col items-center mb-8">
                 <img
-                    src={userDetails.profilePicture}
+                    src={userDetails.profilePicture || '/default-avatar.png'}
                     alt="Profile"
-                    className="w-24 h-24 rounded-full mr-6 shadow-lg"
+                    className="w-32 h-32 rounded-full shadow-md mb-4"
                 />
-                <div>
-                    <h1 className="text-3xl font-semibold text-gray-800">{userDetails.name}</h1>
-                    <p className="text-gray-600">@{userDetails.username}</p>
-                </div>
+                <h1 className="text-2xl font-semibold text-gray-900">{userDetails.name}</h1>
+                <p className="text-gray-600">@{userDetails.username}</p>
             </div>
-            <p className="text-lg font-medium mb-4 text-gray-700">Email: {userDetails.email}</p>
-            {isCreator ? (
-                <div className="mb-4">
-                    <p className="text-lg font-medium mb-2 text-green-600">Role: Creator</p>
-                    <button onClick={navigateToCreateCourse} className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">
-                        Create a course
+
+            <div className="bg-white rounded-lg shadow-lg p-6 mb-6 w-full max-w-lg text-center">
+                <p className="text-gray-700">Email: {userDetails.email}</p>
+                <p className={`text-lg font-medium mt-4 ${isCreator ? 'text-blue-600' : 'text-gray-500'}`}>
+                    Role: {isCreator ? 'Creator' : 'Learner'}
+                </p>
+                {isCreator ? (
+                    <button
+                        onClick={navigateToCreateCourse}
+                        className="mt-4 w-full border border-blue-500 text-blue-500 rounded-lg py-2 hover:bg-blue-50 transition-colors"
+                    >
+                        Create a Course
                     </button>
-                </div>
-            ) : (
-                <p className="text-lg font-medium mb-4 text-red-600">Role: Learner</p>
-            )}
-            {!isCreator && <button onClick={becomeCreator} className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition">Become a creator?</button>}
-            <h2 className="text-2xl font-semibold mb-4 text-gray-800">Courses Bought</h2>
-            <ul className="list-disc ml-8">
-                {userDetails.coursesBought.map((course, index) => (
-                    <li key={index} className="text-gray-700">{course}</li>
-                ))}
-            </ul>
+                ) : (
+                    <button
+                        onClick={becomeCreator}
+                        className="mt-4 w-full border border-gray-500 text-gray-600 rounded-lg py-2 hover:bg-gray-100 transition-colors"
+                    >
+                        Become a Creator?
+                    </button>
+                )}
+            </div>
+
+            <div className="w-full max-w-lg">
+                <h2 className="text-xl font-semibold text-gray-800 mb-4">Courses Bought</h2>
+                {userDetails.coursesBought.length > 0 ? (
+                    <ul className="bg-white rounded-lg shadow p-4">
+                        {userDetails.coursesBought.map((course, index) => (
+                            <li key={index} className="text-gray-700 py-1 border-b last:border-none">
+                                {course}
+                            </li>
+                        ))}
+                    </ul>
+                ) : (
+                    <p className="text-gray-500">No courses bought yet.</p>
+                )}
+            </div>
         </div>
     );
 };
