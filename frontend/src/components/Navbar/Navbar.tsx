@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FiLogOut, FiUser, FiBookOpen } from 'react-icons/fi';
 
@@ -11,6 +11,10 @@ interface NavbarProps {
 const Navbar: React.FC<NavbarProps> = ({ isAuthenticated, profilePicture, onLogout }) => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        setIsDropdownOpen(false); // Close dropdown when authentication state changes
+    }, [isAuthenticated]);
 
     const handleProfileClick = () => {
         setIsDropdownOpen(!isDropdownOpen);
@@ -50,7 +54,7 @@ const Navbar: React.FC<NavbarProps> = ({ isAuthenticated, profilePicture, onLogo
 
                         {/* Dropdown Menu */}
                         {isDropdownOpen && (
-                            <div className="absolute right-0 mt-3 w-44 bg-white rounded-lg shadow-lg ring-1 ring-gray-200">
+                            <div className="absolute z-10 right-0 mt-3 w-44 bg-white rounded-lg shadow-lg ring-1 ring-gray-200">
                                 <Link
                                     to="/profile"
                                     onClick={() => setIsDropdownOpen(false)}

@@ -9,7 +9,11 @@ interface FormData {
     password: string;
 }
 
-const LoginForm = () => {
+interface ILoginFormProps {
+    onLoginSuccess: () => void
+}
+
+const LoginForm: React.FC<ILoginFormProps> = ({ onLoginSuccess }) => {
     const { handleSubmit, register } = useForm<FormData>();
     const navigate = useNavigate()
     const onSubmit = handleSubmit(async (data) => {
@@ -17,6 +21,7 @@ const LoginForm = () => {
             const response = await axios.post(`${serverUrl}/api/v1/auth/login`, data);
             const token = response.data.token;
             localStorage.setItem("token", token);
+            onLoginSuccess()
             navigate("/feed")
         } catch (error) {
             console.error("Login failed:", error);
