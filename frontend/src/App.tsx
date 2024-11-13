@@ -40,15 +40,7 @@ function App() {
         <Route path="/login" element={<LoginForm />} />
         <Route path="/feed" element={<Feed />} />
         <Route path="/createCourse" element={<CourseForm />} />
-        <Route path="/course/:id" element={<Course
-          name="Course Name"
-          bannerPicture="https://via.placeholder.com/300"
-          description="Sample description"
-          price={49.99}
-          createdBy="Creator Name"
-          content={["Lesson 1", "Lesson 2", "Lesson 3"]}
-          totalSold={100}
-        />} />
+        <Route path="feed/course/:courseId" element={<Course />} />
         {isAuthenticated && (
           <Route path="/profile" element={<Profile />} />
         )}

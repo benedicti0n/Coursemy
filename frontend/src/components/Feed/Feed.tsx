@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 
 import CourseCard from '../Course/CourseCard';
+import { useNavigate } from 'react-router-dom';
 
 const serverUrl: string = import.meta.env.VITE_SERVER_URL || "http://localhost:8080";
 
@@ -12,13 +13,13 @@ interface ICourseCard {
   createdBy: { userId: string; name: string; _id: string }[];
   totalSold: number;
   price: number;
+  onClick: () => void;
 }
 
 const Feed: React.FC = () => {
   const [allCourses, setAllCourses] = useState<ICourseCard[] | null>(null)
 
   useEffect(() => {
-
     const getAllCourses = async () => {
       try {
         const response = await axios.get(`${serverUrl}/api/v1/course/feed`)
@@ -34,6 +35,12 @@ const Feed: React.FC = () => {
 
   }, [])
 
+  const navigate = useNavigate()
+
+  const redirectToCourse = (courseId: string) => {
+    navigate(`course/${courseId}`)
+  }
+
   return (
     <div className="p-8 bg-gray-50 min-h-screen">
       <h2 className="text-3xl font-semibold mb-6">Available Courses</h2>
@@ -47,6 +54,7 @@ const Feed: React.FC = () => {
             creator={course.createdBy[0]?.name}
             totalSold={course.totalSold}
             price={course.price}
+            onClick={() => redirectToCourse(course._id)}
           />
         ))}
       </div>
