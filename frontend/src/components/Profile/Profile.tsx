@@ -1,5 +1,16 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import CourseCard from '../Course/CourseCard';
+
+interface ICourse {
+    _id: string;
+    bannerPicture?: string;
+    name: string;
+    description?: string;
+    price: number;
+    totalSold: number;
+    onClick: () => void;
+}
 
 interface IUserDetails {
     profilePicture?: string;
@@ -8,6 +19,7 @@ interface IUserDetails {
     email: string;
     role: 'creator' | 'learner';
     coursesBought: string[];
+    coursesCreated: ICourse[];
 }
 
 interface ProfileProps {
@@ -24,6 +36,8 @@ const Profile: React.FC<ProfileProps> = ({ userDetails }) => {
     const navigateToCreateCourse = () => {
         navigate('/createCourse');
     };
+
+
 
     return (
         <div className="p-8 bg-gray-100 min-h-screen flex flex-col items-center">
@@ -68,7 +82,29 @@ const Profile: React.FC<ProfileProps> = ({ userDetails }) => {
                     <p className="text-gray-500">No courses bought yet.</p>
                 )}
             </div>
-        </div>
+
+            <div className="w-full max-w-lg">
+                <h2 className="text-xl font-semibold text-gray-800 mb-4">Courses Created</h2>
+                {userDetails.coursesCreated.length > 0 ? (
+                    <div className="grid gap-4">
+                        {userDetails.coursesCreated.map((course) => (
+                            <CourseCard
+                                _id={course._id}
+                                key={course._id}
+                                bannerPicture={course.bannerPicture}
+                                name={course.name}
+                                description={course.description}
+                                price={course.price}
+                                totalSold={course.totalSold}
+                                onClick={() => redirectToCourse(course._id)}
+                            />
+                        ))}
+                    </div>
+                ) : (
+                    <p className="text-gray-500">No courses created yet.</p>
+                )}
+            </div>
+        </div >
     );
 };
 
