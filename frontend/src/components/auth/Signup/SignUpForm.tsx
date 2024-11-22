@@ -1,9 +1,10 @@
-import { useForm } from "react-hook-form"
-import { useState } from "react"
-import axios from "axios"
+import { useForm } from "react-hook-form";
+import { useState } from "react";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Button from "../../../ui/Button";
 
-const serverUrl: string = import.meta.env.SERVER_URL as string || "http://localhost:8080"
+const serverUrl: string = import.meta.env.SERVER_URL as string || "http://localhost:8080";
 
 interface FormData {
     name: string;
@@ -13,68 +14,70 @@ interface FormData {
     role: "learner" | "creator";
 }
 
-const SignUpForm = () => {
-    const { handleSubmit, register } = useForm<FormData>()
-    const [selectedImage, setSelectedImage] = useState<File | null>(null)
-    const [selectedImagePreview, setselectedImagePreview] = useState<string>("")
+const SignUpForm: React.FC = () => {
+    const { handleSubmit, register } = useForm<FormData>();
+    const [selectedImage, setSelectedImage] = useState<File | null>(null);
+    const [selectedImagePreview, setSelectedImagePreview] = useState<string>("");
 
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     const onSubmit = handleSubmit(async (data) => {
-        const formData = new FormData()
+        const formData = new FormData();
 
-        formData.append("name", data.name)
-        formData.append("username", data.username)
-        formData.append("email", data.email)
-        formData.append("password", data.password)
-        formData.append("role", data.role)
+        formData.append("name", data.name);
+        formData.append("username", data.username);
+        formData.append("email", data.email);
+        formData.append("password", data.password);
+        formData.append("role", data.role);
         if (selectedImage) {
-            formData.append("profilePicture", selectedImage)
+            formData.append("profilePicture", selectedImage);
         }
 
         try {
-            const result = await axios.post(`${serverUrl}/api/v1/auth/signUp`, formData, {
+            await axios.post(`${serverUrl}/api/v1/auth/signUp`, formData, {
                 headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            })
-
-            console.log(result);
-
-            navigate("/login")
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+            navigate("/login");
         } catch (error) {
             if (axios.isAxiosError(error) && error.response?.status === 409) {
                 console.error("User already exists:", error.response.data.message);
-                navigate("/login")
+                navigate("/login");
             } else {
                 console.error("Signup failed:", error);
             }
         }
-    })
+    });
 
     return (
-        <form encType="multipart/form-data" onSubmit={onSubmit} className="max-w-md mx-auto mt-8 p-6 bg-white rounded-lg shadow-md">
+        <form
+            encType="multipart/form-data"
+            onSubmit={onSubmit}
+            className="max-w-md mx-auto mt-8 p-6 bg-white rounded-lg shadow-md"
+        >
             <div className="space-y-4">
+                {/* Text Inputs */}
                 <input
                     {...register("name")}
                     placeholder="Name"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
                 />
                 <input
                     {...register("username")}
                     placeholder="Username"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
                 />
                 <input
                     {...register("email")}
                     placeholder="Email"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
                 />
                 <input
                     {...register("password")}
                     type="password"
                     placeholder="Password"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
                 />
 
                 {/* Profile Picture Upload */}
@@ -84,8 +87,8 @@ const SignUpForm = () => {
                         accept="image/*"
                         onChange={(e) => {
                             if (e.target.files?.[0]) {
-                                setSelectedImage(e.target.files[0])
-                                setselectedImagePreview(URL.createObjectURL(e.target.files[0]))
+                                setSelectedImage(e.target.files[0]);
+                                setSelectedImagePreview(URL.createObjectURL(e.target.files[0]));
                             }
                         }}
                         className="hidden"
@@ -93,16 +96,32 @@ const SignUpForm = () => {
                     />
                     <label
                         htmlFor="profilePicture"
-                        className="flex flex-col items-center justify-center w-full p-4 border-2 border-dashed border-gray-300 rounded-md cursor-pointer hover:bg-gray-50"
+                        className="flex flex-col items-center justify-center w-full p-4 border-2 border-dashed border-gray-300 rounded-md cursor-pointer hover:bg-gray-100"
                     >
                         {selectedImage ? (
-                            <img src={selectedImagePreview} alt="Preview" className="w-32 h-32 object-cover rounded-full" />
+                            <img
+                                src={selectedImagePreview}
+                                alt="Preview"
+                                className="w-32 h-32 object-cover rounded-full"
+                            />
                         ) : (
                             <>
-                                <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                <svg
+                                    className="w-8 h-8 text-gray-400"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth="2"
+                                        d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                                    />
                                 </svg>
-                                <span className="mt-2 text-sm text-gray-500">Upload Profile Picture</span>
+                                <span className="mt-2 text-sm text-gray-500">
+                                    Upload Profile Picture
+                                </span>
                             </>
                         )}
                     </label>
@@ -117,7 +136,7 @@ const SignUpForm = () => {
                                 type="radio"
                                 {...register("role")}
                                 value="learner"
-                                className="form-radio text-blue-500 focus:ring-blue-500"
+                                className="form-radio text-black focus:ring-black"
                             />
                             <span>Learner</span>
                         </label>
@@ -126,22 +145,20 @@ const SignUpForm = () => {
                                 type="radio"
                                 {...register("role")}
                                 value="creator"
-                                className="form-radio text-blue-500 focus:ring-blue-500"
+                                className="form-radio text-black focus:ring-black"
                             />
                             <span>Creator</span>
                         </label>
                     </div>
                 </div>
 
-                <button
-                    type="submit"
-                    className="w-full py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                >
+                {/* Submit Button */}
+                <Button type="submit" className="w-full">
                     Sign Up
-                </button>
+                </Button>
             </div>
         </form>
-    )
-}
+    );
+};
 
-export default SignUpForm
+export default SignUpForm;

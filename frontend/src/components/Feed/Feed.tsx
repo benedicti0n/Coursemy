@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react'
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-import CourseCard from '../Course/CourseCard';
-import { useNavigate } from 'react-router-dom';
+import CourseCard from "../Course/CourseCard";
 
 const serverUrl: string = import.meta.env.VITE_SERVER_URL || "http://localhost:8080";
 
@@ -10,54 +10,55 @@ interface ICourseCard {
   _id: string;
   bannerPicture: string;
   name: string;
-  createdBy: { userId: string; name: string; _id: string }[];
   totalSold: number;
   price: number;
   onClick: () => void;
 }
 
 const Feed: React.FC = () => {
-  const [allCourses, setAllCourses] = useState<ICourseCard[] | null>(null)
+  const [allCourses, setAllCourses] = useState<ICourseCard[] | null>(null);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const getAllCourses = async () => {
+    const fetchCourses = async () => {
       try {
-        const response = await axios.get(`${serverUrl}/api/v1/course/feed`)
-        const data = response.data
-
-        setAllCourses(data)
+        const response = await axios.get(`${serverUrl}/api/v1/course/feed`);
+        setAllCourses(response.data);
       } catch (error) {
-        console.error(error);
+        console.error("Failed to fetch courses:", error);
       }
-    }
+    };
 
-    getAllCourses()
+    fetchCourses();
 
-  }, [])
-
-  const navigate = useNavigate()
+  }, []);
+  console.log(allCourses);
 
   const redirectToCourse = (courseId: string) => {
-    navigate(`course/${courseId}`)
-  }
+    navigate(`course/${courseId}`);
+  };
 
   return (
-    <div className="p-8 bg-gray-50 min-h-screen">
-      <h2 className="text-3xl font-semibold mb-6">Available Courses</h2>
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {allCourses?.map((course) => (
-          <CourseCard
-            key={course._id}
-            id={course._id}
-            bannerPicture={course.bannerPicture}
-            name={course.name}
-            creator={course.createdBy[0]?.name}
-            totalSold={course.totalSold}
-            price={course.price}
-            onClick={() => redirectToCourse(course._id)}
-          />
-        ))}
-      </div>
+    <div className="p-8 bg-white min-h-screen">
+      <h2 className="text-3xl font-semibold text-gray-800 mb-6">Available Courses</h2>
+      {allCourses ? (
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {allCourses.map((course) => (
+            <CourseCard
+              key={course._id}
+              _id={course._id}
+              bannerPicture={course.bannerPicture}
+              name={course.name}
+              totalSold={course.totalSold}
+              price={course.price}
+              onClick={() => redirectToCourse(course._id)}
+            />
+          ))}
+        </div>
+      ) : (
+        <div className="text-center text-gray-600 mt-12">Loading courses...</div>
+      )}
     </div>
   );
 };

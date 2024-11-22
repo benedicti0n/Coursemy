@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FiLogOut, FiUser, FiBookOpen } from 'react-icons/fi';
+import Button from '../../ui/Button';
 
 interface NavbarProps {
     isAuthenticated: boolean;
@@ -26,15 +27,18 @@ const Navbar: React.FC<NavbarProps> = ({ isAuthenticated, profilePicture, onLogo
     };
 
     return (
-        <nav className="flex justify-between items-center py-4 px-8 bg-gray-100 shadow-sm">
+        <nav className="flex justify-between items-center py-4 px-8 bg-white shadow-md">
             {/* Brand Logo */}
-            <div className="text-2xl font-bold text-gray-800">
+            <div className="text-2xl font-bold text-black">
                 <Link to="/">Coursemy</Link>
             </div>
 
             {/* Navigation Links & Profile */}
             <div className="flex items-center space-x-6">
-                <Link to="/feed" className="text-gray-700 hover:text-blue-500 transition-colors">
+                <Link
+                    to="/feed"
+                    className="text-gray-700 hover:text-black transition-colors"
+                >
                     Courses
                 </Link>
 
@@ -43,7 +47,7 @@ const Navbar: React.FC<NavbarProps> = ({ isAuthenticated, profilePicture, onLogo
                         {/* Profile Picture */}
                         <button
                             onClick={handleProfileClick}
-                            className="focus:outline-none rounded-full border-2 border-gray-300 hover:border-gray-400 transition-all"
+                            className="focus:outline-none rounded-full border-2 border-gray-300 hover:border-gray-500 transition-all"
                         >
                             <img
                                 src={profilePicture || 'https://via.placeholder.com/40'}
@@ -60,7 +64,7 @@ const Navbar: React.FC<NavbarProps> = ({ isAuthenticated, profilePicture, onLogo
                                     onClick={() => setIsDropdownOpen(false)}
                                     className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors"
                                 >
-                                    <FiUser className="text-blue-500" />
+                                    <FiUser className="text-black" />
                                     My Profile
                                 </Link>
                                 <Link
@@ -68,14 +72,14 @@ const Navbar: React.FC<NavbarProps> = ({ isAuthenticated, profilePicture, onLogo
                                     onClick={() => setIsDropdownOpen(false)}
                                     className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors"
                                 >
-                                    <FiBookOpen className="text-blue-500" />
+                                    <FiBookOpen className="text-black" />
                                     My Learnings
                                 </Link>
                                 <button
                                     onClick={handleLogout}
                                     className="flex items-center gap-2 w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors"
                                 >
-                                    <FiLogOut className="text-blue-500" />
+                                    <FiLogOut className="text-black" />
                                     Logout
                                 </button>
                             </div>
@@ -83,18 +87,17 @@ const Navbar: React.FC<NavbarProps> = ({ isAuthenticated, profilePicture, onLogo
                     </div>
                 ) : (
                     <div className="flex space-x-4">
-                        <button
+                        <Button
                             onClick={() => navigate('/signup')}
-                            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-400 transition-colors"
                         >
                             Sign Up
-                        </button>
-                        <button
+                        </Button>
+                        <Button
                             onClick={() => navigate('/login')}
-                            className="px-4 py-2 border border-blue-500 text-blue-500 rounded-lg hover:bg-blue-50 transition-colors"
+                            variant="secondary"
                         >
                             Log In
-                        </button>
+                        </Button>
                     </div>
                 )}
             </div>
