@@ -7,8 +7,8 @@ interface User {
     password: string;
     profilePicture?: string;
     role: "creator" | "learner";
-    coursesBought: Types.ObjectId[];
-    coursesCreated: Types.ObjectId[];
+    coursesBought?: Types.ObjectId[];
+    coursesCreated?: Types.ObjectId[];
 }
 
 const userSchema = new Schema<User>({
