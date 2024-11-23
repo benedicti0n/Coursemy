@@ -27,10 +27,13 @@ const Navbar: React.FC<NavbarProps> = ({ isAuthenticated, profilePicture, onLogo
     };
 
     return (
-        <nav className="flex justify-between items-center py-4 px-8 bg-white shadow-md">
+        <nav className="flex justify-between items-center py-4 px-8 bg-white shadow-md border-2">
             {/* Brand Logo */}
-            <div className="text-2xl font-bold text-black">
-                <Link to="/">Coursemy</Link>
+            <div className="text-2xl font-bold text-black flex items-center">
+                <Link to="/">
+                    <img src="/coursemy.png" alt="" className='h-12' />
+                </Link>
+                <h1 className='pl-2'>Coursemy</h1>
             </div>
 
             {/* Navigation Links & Profile */}
