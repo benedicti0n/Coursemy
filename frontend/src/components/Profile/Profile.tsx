@@ -1,7 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import CourseCard from '../Course/CourseCard';
 import Button from '../../ui/Button';
+import checkToken from '../../util/checkToken';
+
+const serverUrl: string = import.meta.env.VITE_SERVER_URL || 'http://localhost:8080';
+
 
 interface ICourse {
     _id: string;
@@ -14,12 +19,13 @@ interface ICourse {
 }
 
 interface IUserDetails {
+    _id: string;
     profilePicture?: string;
     name: string;
     username: string;
     email: string;
     role: 'creator' | 'learner';
-    coursesBought: string[];
+    coursesBought: ICourse[]
     coursesCreated: ICourse[];
 }
 
@@ -29,9 +35,33 @@ interface ProfileProps {
 
 const Profile: React.FC<ProfileProps> = ({ userDetails }) => {
     const navigate = useNavigate();
+    const [isCreator, setIsCreator] = useState<boolean>(false)
+
+    if (userDetails?.role === 'creator') {
+        setIsCreator(true)
+    }
 
     if (!userDetails) {
         return <div className="p-8 text-gray-500">Loading...</div>;
+    }
+
+    const becomeCreator = async () => {
+        try {
+            const token = checkToken()
+            const response = await axios.post(`${serverUrl}/api/v1/user/profile`, {}, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+
+            if (!response) {
+                alert("Error changing role")
+            }
+
+            setIsCreator(true)
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     const navigateToCreateCourse = () => {
@@ -55,25 +85,32 @@ const Profile: React.FC<ProfileProps> = ({ userDetails }) => {
             {/* User Role & Actions */}
             <div className="w-full max-w-4xl bg-white p-6 rounded-lg shadow-lg mb-10">
                 <div className="flex justify-between items-center mb-6">
-                    <p className={`text-lg font-medium ${userDetails.role === 'creator' ? 'text-black' : 'text-gray-500'}`}>
-                        Role: {userDetails.role === 'creator' ? 'Creator' : 'Learner'}
+                    <p className={`text-lg font-medium ${isCreator ? 'text-black' : 'text-gray-500'}`}>
+                        Role: {isCreator ? 'Creator' : 'Learner'}
                     </p>
-                    {userDetails.role === 'creator' && (
+                    {isCreator ? (
                         <Button
                             onClick={navigateToCreateCourse}
                             variant="secondary"
                         >
                             Create a Course
                         </Button>
+                    ) : (
+                        <Button
+                            onClick={becomeCreator}
+                            variant='primary'
+                        >
+                            Become a creator
+                        </Button>
                     )}
                 </div>
                 <p className="text-gray-600">
-                    {userDetails.role === 'creator' ? 'As a creator, you can create courses for learners.' : 'As a learner, explore and purchase courses!'}
+                    {isCreator ? 'As a creator, you can create courses for learners.' : 'As a learner, explore and purchase courses!'}
                 </p>
             </div>
 
             {/* Courses Created */}
-            {userDetails.role === "creator" &&
+            {isCreator &&
                 <div className="w-full max-w-4xl bg-white p-6 rounded-lg shadow-lg mb-10">
                     <h2 className="text-xl font-semibold text-gray-800 mb-4">Courses Created</h2>
                     {userDetails.coursesCreated.length > 0 ? (
