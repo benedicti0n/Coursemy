@@ -72,44 +72,30 @@ const Profile: React.FC<ProfileProps> = ({ userDetails }) => {
                 </p>
             </div>
 
-            {/* Courses Bought */}
-            <div className="w-full max-w-4xl bg-white p-6 rounded-lg shadow-lg mb-10">
-                <h2 className="text-xl font-semibold text-gray-800 mb-4">Courses Bought</h2>
-                {userDetails.coursesBought.length > 0 ? (
-                    <ul className="space-y-2">
-                        {userDetails.coursesBought.map((course, index) => (
-                            <li key={index} className="text-gray-700 py-1 border-b last:border-none">
-                                {course}
-                            </li>
-                        ))}
-                    </ul>
-                ) : (
-                    <p className="text-gray-500">No courses bought yet.</p>
-                )}
-            </div>
-
             {/* Courses Created */}
-            <div className="w-full max-w-4xl bg-white p-6 rounded-lg shadow-lg mb-10">
-                <h2 className="text-xl font-semibold text-gray-800 mb-4">Courses Created</h2>
-                {userDetails.coursesCreated.length > 0 ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {userDetails.coursesCreated.map((course) => (
-                            <CourseCard
-                                _id={course._id}
-                                key={course._id}
-                                bannerPicture={course.bannerPicture}
-                                name={course.name}
-                                description={course.description}
-                                price={course.price}
-                                totalSold={course.totalSold}
-                                onClick={() => navigate(`/course/${course._id}`)}
-                            />
-                        ))}
-                    </div>
-                ) : (
-                    <p className="text-gray-500">No courses created yet.</p>
-                )}
-            </div>
+            {userDetails.role === "creator" &&
+                <div className="w-full max-w-4xl bg-white p-6 rounded-lg shadow-lg mb-10">
+                    <h2 className="text-xl font-semibold text-gray-800 mb-4">Courses Created</h2>
+                    {userDetails.coursesCreated.length > 0 ? (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {userDetails.coursesCreated.map((course) => (
+                                <CourseCard
+                                    _id={course._id}
+                                    key={course._id}
+                                    bannerPicture={course.bannerPicture}
+                                    name={course.name}
+                                    description={course.description}
+                                    price={course.price}
+                                    totalSold={course.totalSold}
+                                    onClick={() => navigate(`/feed/course/${course._id}`)}
+                                />
+                            ))}
+                        </div>
+                    ) : (
+                        <p className="text-gray-500">No courses created yet.</p>
+                    )}
+                </div>}
+
         </div>
     );
 };
