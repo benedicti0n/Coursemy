@@ -10,6 +10,7 @@ interface ICourseCard {
   _id: string;
   bannerPicture: string;
   name: string;
+  description: string;
   totalSold: number;
   price: number;
   onClick: () => void;
@@ -50,6 +51,7 @@ const Feed: React.FC = () => {
               _id={course._id}
               bannerPicture={course.bannerPicture}
               name={course.name}
+              description={course.description}
               totalSold={course.totalSold}
               price={course.price}
               onClick={() => redirectToCourse(course._id)}

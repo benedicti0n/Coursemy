@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import CourseCard from '../Course/CourseCard';
@@ -10,11 +10,11 @@ const serverUrl: string = import.meta.env.VITE_SERVER_URL || 'http://localhost:8
 
 interface ICourse {
     _id: string;
-    bannerPicture?: string;
+    bannerPicture: string;
     name: string;
-    description?: string;
-    price: number;
+    description: string;
     totalSold: number;
+    price: number;
     onClick: () => void;
 }
 
@@ -37,9 +37,12 @@ const Profile: React.FC<ProfileProps> = ({ userDetails }) => {
     const navigate = useNavigate();
     const [isCreator, setIsCreator] = useState<boolean>(false)
 
-    if (userDetails?.role === 'creator') {
-        setIsCreator(true)
-    }
+    useEffect(() => {
+        if (userDetails?.role === 'creator') {
+            setIsCreator(true)
+        }
+    }, [userDetails])
+
 
     if (!userDetails) {
         return <div className="p-8 text-gray-500">Loading...</div>;
@@ -66,6 +69,10 @@ const Profile: React.FC<ProfileProps> = ({ userDetails }) => {
 
     const navigateToCreateCourse = () => {
         navigate('/createCourse');
+    };
+
+    const redirectToCourse = (courseId: string) => {
+        navigate(`course/${courseId}`);
     };
 
     return (
@@ -117,14 +124,14 @@ const Profile: React.FC<ProfileProps> = ({ userDetails }) => {
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                             {userDetails.coursesCreated.map((course) => (
                                 <CourseCard
-                                    _id={course._id}
                                     key={course._id}
+                                    _id={course._id}
                                     bannerPicture={course.bannerPicture}
                                     name={course.name}
                                     description={course.description}
-                                    price={course.price}
                                     totalSold={course.totalSold}
-                                    onClick={() => navigate(`/feed/course/${course._id}`)}
+                                    price={course.price}
+                                    onClick={() => redirectToCourse(course._id)}
                                 />
                             ))}
                         </div>
