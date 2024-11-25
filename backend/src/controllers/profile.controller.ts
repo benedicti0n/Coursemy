@@ -1,27 +1,34 @@
 import { Request, Response } from "express"
-
 import User from "../models/user.model"
+import Course from '../models/course.model';
 
 export const fetchProfileDetails = async (req: Request, res: Response): Promise<void> => {
     try {
-        const userId = req._id
-        const response = await User.findById(userId, "profilePicture name username email role coursesBought")
+        const userId = req._id;
 
-        if (!response) {
-            res.status(400).json({ message: "User detaild couldn't be fetched" })
-            return
+        const user = await User.findById(userId, 'profilePicture name username email role coursesBought coursesCreated')
+            .populate({
+                path: 'coursesCreated',
+                model: Course,
+                select: 'name description price bannerPicture totalSold'
+            });
+
+        if (!user) {
+            res.status(400).json({ message: "User details couldn't be fetched" });
+            return;
         }
 
-        res.json(response)
+        res.json(user);
     } catch (error) {
-        res.status(500).json({ message: "Error fetching details" })
+        console.error('Error fetching profile details:', error);
+        res.status(500).json({ message: 'Error fetching details' });
     }
-}
+};
+
 
 export const becomeCreator = async (req: Request, res: Response): Promise<void> => {
     try {
         const userId = req._id
-        console.log(userId);
 
         const response = await User.findByIdAndUpdate(userId, { role: "creator" })
 
