@@ -3,7 +3,7 @@ import React from 'react';
 interface ButtonProps {
     onClick?: () => void;
     children: React.ReactNode;
-    variant?: 'primary' | 'secondary';
+    variant?: 'primary' | 'secondary' | 'danger';
     type?: string;
 }
 
@@ -13,6 +13,7 @@ const Button: React.FC<ButtonProps> = ({ onClick, children, variant = 'primary' 
     const variants = {
         primary: 'border border-black text-black hover:bg-black hover:text-white',
         secondary: 'bg-black text-white hover:bg-gray-800',
+        danger: 'bg-red-500 text-white hover:bg-red-700',
     };
 
     return (
