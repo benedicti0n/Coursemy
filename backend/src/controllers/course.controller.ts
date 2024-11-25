@@ -9,7 +9,6 @@ export const createCourse = async (req: Request, res: Response) => {
         const bannerPicture = req.file
         const userId = req._id
 
-        const data = await User.findById(userId, "name")
         const content: string[] = JSON.parse(formData.content)
 
         const result = await cloudinary.uploader.upload(bannerPicture!.path)
@@ -21,15 +20,19 @@ export const createCourse = async (req: Request, res: Response) => {
             description: formData.description,
             price: formData.price,
             content: content,
-            createdBy: {
-                userId,
-                name: data?.name
-            }
+            createdBy: userId,
         })
 
-        await course.save()
+        console.log(course);
 
+        await course.save()
         console.log("Course created successfully");
+
+        await User.findByIdAndUpdate(userId, {
+            $push: {
+                coursesCreated: course._id
+            }
+        })
 
         res.status(200).json({ message: "Course created successfully" })
     } catch (error) {
@@ -39,7 +42,7 @@ export const createCourse = async (req: Request, res: Response) => {
 
 export const getAllCourses = async (req: Request, res: Response) => {
     try {
-        const allCourses = await Course.find({}, "_id bannerPicture name createdBy totalSold price")
+        const allCourses = await Course.find({}, "_id name bannerPicture description price totalSold")
 
         res.status(200).json(allCourses)
     } catch (error) {
@@ -48,12 +51,21 @@ export const getAllCourses = async (req: Request, res: Response) => {
 }
 
 export const fetchCourseDetails = async (req: Request, res: Response) => {
-    const courseId = req.params.courseId
+    const { courseId } = req.params
 
     try {
-        const courseDetails = await Course.findById(courseId)
-        res.status(200).json(courseDetails)
+        const course = await Course.findById(courseId).populate('createdBy', 'name')
+
+        console.log(course);
+
+        if (!course) {
+            res.status(404).json({ message: "Couldn't fetch course details" })
+        }
+
+        res.status(200).send(course)
     } catch (error) {
-        console.error(error);
+        res.status(500).json({ message: "Internal Server error" })
+        console.log("hi");
+
     }
 }
