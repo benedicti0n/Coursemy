@@ -42,11 +42,11 @@ const userSchema = new Schema<User>({
     },
     coursesBought: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Course'
+        ref: 'course'
     }],
     coursesCreated: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Course'
+        ref: 'course'
     }]
 }, { timestamps: true })
 
