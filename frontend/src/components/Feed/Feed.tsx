@@ -37,7 +37,7 @@ const Feed: React.FC = () => {
   console.log(allCourses);
 
   const redirectToCourse = (courseId: string) => {
-    navigate(`course/${courseId}`);
+    navigate(`/course/${courseId}`);
   };
 
   return (

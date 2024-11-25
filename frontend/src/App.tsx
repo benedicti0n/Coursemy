@@ -11,14 +11,17 @@ import Feed from './components/Feed/Feed';
 import Course from './components/Course/Course';
 import Profile from './components/Profile/Profile';
 import CourseForm from './components/Course/CourseForm';
+import MyLearning from './components/MyLearning/MyLearning';
 
 interface IUserDetails {
+  _id: string;
   profilePicture?: string;
   name: string;
   username: string;
   email: string;
   role: 'creator' | 'learner';
   coursesBought: string[];
+  coursesCreated: string[];
 }
 
 const serverUrl: string = import.meta.env.VITE_SERVER_URL || 'http://localhost:8080';
@@ -40,8 +43,9 @@ function App() {
         },
       });
 
-      setUserDetails(response.data);
-      setProfilePicture(response.data.profilePicture);
+      const userData = response.data
+      setUserDetails(userData);
+      setProfilePicture(userData.profilePicture);
     } catch (error: any) {
       console.error('Error fetching profile details:', error.response?.data || error.message);
     }
@@ -52,7 +56,7 @@ function App() {
       const token = localStorage.getItem('token');
       if (token) {
         setIsAuthenticated(true);
-        await fetchProfileDetails(); // Fetch profile details after authentication
+        await fetchProfileDetails();
       } else {
         setIsAuthenticated(false);
       }
@@ -84,10 +88,11 @@ function App() {
         <Route path="/login" element={<LoginForm onLoginSuccess={handleLogin} />} />
         <Route path="/feed" element={<Feed />} />
         <Route path="/createCourse" element={<CourseForm />} />
-        <Route path="feed/course/:courseId" element={<Course />} />
+        <Route path="/course/:courseId" element={<Course />} />
         {isAuthenticated && (
           <Route path="/profile" element={<Profile userDetails={userDetails} />} />
         )}
+        <Route path="/learnings" element={<MyLearning />} />
       </Routes>
     </div>
   );

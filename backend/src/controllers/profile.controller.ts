@@ -42,3 +42,22 @@ export const becomeCreator = async (req: Request, res: Response): Promise<void> 
         res.status(500).json({ message: "Error changing the data" })
     }
 }
+
+export const fetchBoughtCourses = async (req: Request, res: Response) => {
+    const userId = req._id
+    try {
+        const response = await User.findById(userId, "coursesBought").populate({
+            path: "coursesBought",
+            model: Course,
+            select: "_id bannerPicture name description totalSold price"
+        })
+
+        if (!response) {
+            res.status(403).json({ message: "Couldnt find the courses" })
+        }
+
+        res.status(200).json(response)
+    } catch (error) {
+        res.status(500).json({ message: "Internal server error" })
+    }
+}
