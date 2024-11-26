@@ -125,7 +125,7 @@ const Profile: React.FC<ProfileProps> = ({ userDetails }) => {
                     )}
                 </div>
                 <div className='flex w-full justify-end bg-white p-6 rounded-lg shadow-lg mt-10'>
-                    <h1 className="text-5xl font-bold text-black pr-4">{userDetails.wallet} ₹</h1>
+                    <h1 className="text-5xl font-bold text-black pr-4">{userDetails.wallet} $</h1>
                     <Button
                         variant='secondary'
                         onClick={() => setIsMoneyModalOpen(true)}
