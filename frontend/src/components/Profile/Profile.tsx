@@ -19,7 +19,6 @@ interface ICourse {
     price: number;
     onClick: () => void;
 }
-
 interface IUserDetails {
     _id: string;
     profilePicture?: string;
@@ -27,8 +26,8 @@ interface IUserDetails {
     username: string;
     email: string;
     role: 'creator' | 'learner';
-    coursesBought: ICourse[]
-    coursesCreated: ICourse[];
+    coursesBought: string[];
+    coursesCreated: string[];
 }
 
 interface ProfileProps {
