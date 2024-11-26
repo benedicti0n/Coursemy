@@ -13,6 +13,16 @@ import Profile from './components/Profile/Profile';
 import CourseForm from './components/Course/CourseForm';
 import MyLearning from './components/MyLearning/MyLearning';
 
+interface ICourse {
+  _id: string;
+  bannerPicture: string;
+  name: string;
+  description: string;
+  totalSold: number;
+  price: number;
+  onClick: () => void;
+}
+
 interface IUserDetails {
   _id: string;
   profilePicture?: string;
@@ -21,8 +31,9 @@ interface IUserDetails {
   email: string;
   role: 'creator' | 'learner';
   coursesBought: string[];
-  coursesCreated: string[];
+  coursesCreated: ICourse[];
 }
+
 
 const serverUrl: string = import.meta.env.VITE_SERVER_URL || 'http://localhost:8080';
 
