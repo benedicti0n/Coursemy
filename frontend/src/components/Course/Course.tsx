@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -20,6 +20,7 @@ interface ICourseDetails {
 
 const Course: React.FC = () => {
     const [courseDetails, setCourseDetails] = useState<ICourseDetails | null>(null);
+    const [error, setError] = useState<AxiosError | null>(null)
     const { courseId } = useParams();
 
     useEffect(() => {
@@ -32,8 +33,13 @@ const Course: React.FC = () => {
                 setCourseDetails(data);
                 console.log("this is courseDetails: " + courseDetails);
 
-            } catch (error) {
-                console.error(error);
+            } catch (e) {
+                if (axios.isAxiosError(e)) {
+                    setError(e)
+                } else {
+                    console.error(e);
+                    setError(new AxiosError("An unexpected error occured"))
+                }
             }
         };
 
@@ -128,7 +134,7 @@ const Course: React.FC = () => {
                 </div >
             ) : (
                 <div>
-                    <h1>Error fetching the Course Details</h1>
+                    {error ? (<h1> Error fetching the data</h1>) : (<h1>Loading</h1>)}
                 </div >
             )}
 
