@@ -27,7 +27,7 @@ interface IUserDetails {
     email: string;
     role: 'creator' | 'learner';
     coursesBought: string[];
-    coursesCreated: string[];
+    coursesCreated: ICourse[];
 }
 
 interface ProfileProps {

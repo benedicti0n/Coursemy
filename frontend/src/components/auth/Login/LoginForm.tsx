@@ -47,7 +47,7 @@ const LoginForm: React.FC<ILoginFormProps> = ({ onLoginSuccess }) => {
                     placeholder="Password"
                     className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
                 />
-                <Button type="submit" className="w-full">
+                <Button type="submit">
                     Login
                 </Button>
             </div>

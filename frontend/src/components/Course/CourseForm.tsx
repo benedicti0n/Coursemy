@@ -17,6 +17,7 @@ const CourseForm = () => {
     const { handleSubmit, register, control } = useForm<CourseData>();
     const { fields, append, remove } = useFieldArray({
         control,
+        //@ts-ignore
         name: 'content'
     });
     const [selectedImage, setSelectedImage] = useState<File | null>(null);
