@@ -77,7 +77,7 @@ const Profile: React.FC<ProfileProps> = ({ userDetails }) => {
     };
 
     const redirectToCourse = (courseId: string) => {
-        navigate(`course/${courseId}`);
+        navigate(`/course/${courseId}`);
     };
 
     return (
