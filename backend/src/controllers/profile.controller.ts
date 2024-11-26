@@ -61,3 +61,23 @@ export const fetchBoughtCourses = async (req: Request, res: Response) => {
         res.status(500).json({ message: "Internal server error" })
     }
 }
+
+export const handleEditProfile = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const userId = req._id
+        const newName = req.body.data.name
+        const newUsername = req.body.data.username
+
+        const user = await User.findByIdAndUpdate(userId, {
+            name: newName,
+            username: newUsername
+        })
+
+        if (!user) {
+            res.status(403).json({ message: "Couldnt change profile details" })
+        }
+        res.status(200).json(user)
+    } catch (error) {
+        res.status(500).json({ message: "Internal server error" })
+    }
+}

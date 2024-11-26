@@ -4,6 +4,7 @@ import axios from 'axios';
 import CourseCard from '../Course/CourseCard';
 import Button from '../../ui/Button';
 import checkToken from '../../util/checkToken';
+import EditProfileModal from './EditProfileModal';
 
 const serverUrl: string = import.meta.env.VITE_SERVER_URL || 'http://localhost:8080';
 
@@ -36,6 +37,7 @@ interface ProfileProps {
 const Profile: React.FC<ProfileProps> = ({ userDetails }) => {
     const navigate = useNavigate();
     const [isCreator, setIsCreator] = useState<boolean>(false)
+    const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false)
 
     useEffect(() => {
         if (userDetails?.role === 'creator') {
@@ -67,6 +69,8 @@ const Profile: React.FC<ProfileProps> = ({ userDetails }) => {
         }
     }
 
+
+
     const navigateToCreateCourse = () => {
         navigate('/createCourse');
     };
@@ -87,6 +91,26 @@ const Profile: React.FC<ProfileProps> = ({ userDetails }) => {
                 <h1 className="text-3xl font-semibold text-gray-900">{userDetails.name}</h1>
                 <p className="text-xl text-gray-600">@{userDetails.username}</p>
                 <p className="mt-2 text-lg text-gray-700">{userDetails.email}</p>
+                <div className="flex mt-4">
+                    <Button onClick={() => setIsEditModalOpen(true)} variant="primary">
+                        Edit Profile
+                    </Button>
+
+                    {/* just for some margin right to edit profile please ignore */}
+                    <div className='mr-4'></div>
+
+                    {isEditModalOpen && (
+                        <EditProfileModal
+                            isOpen={isEditModalOpen}
+                            onClose={() => setIsEditModalOpen(false)}
+                            userDetails={userDetails}
+                        />
+                    )}
+
+                    <Button onClick={() => console.log('Delete Account Clicked')} variant="danger">
+                        Delete Account
+                    </Button>
+                </div>
             </div>
 
             {/* User Role & Actions */}
@@ -117,7 +141,8 @@ const Profile: React.FC<ProfileProps> = ({ userDetails }) => {
             </div>
 
             {/* Courses Created */}
-            {isCreator &&
+            {
+                isCreator &&
                 <div className="w-full max-w-4xl bg-white p-6 rounded-lg shadow-lg mb-10">
                     <h2 className="text-xl font-semibold text-gray-800 mb-4">Courses Created</h2>
                     {userDetails.coursesCreated.length > 0 ? (
@@ -138,9 +163,10 @@ const Profile: React.FC<ProfileProps> = ({ userDetails }) => {
                     ) : (
                         <p className="text-gray-500">No courses created yet.</p>
                     )}
-                </div>}
+                </div>
+            }
 
-        </div>
+        </div >
     );
 };
 
