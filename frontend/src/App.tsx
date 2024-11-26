@@ -30,6 +30,7 @@ interface IUserDetails {
   username: string;
   email: string;
   role: 'creator' | 'learner';
+  wallet: number;
   coursesBought: string[];
   coursesCreated: ICourse[];
 }
@@ -55,6 +56,7 @@ function App() {
       });
 
       const userData = response.data
+      console.log(userData);
       setUserDetails(userData);
       setProfilePicture(userData.profilePicture);
     } catch (error: any) {
