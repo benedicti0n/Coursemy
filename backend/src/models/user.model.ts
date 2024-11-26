@@ -7,6 +7,7 @@ interface User {
     password: string;
     profilePicture?: string;
     role: "creator" | "learner";
+    wallet: number;
     coursesBought?: Types.ObjectId[];
     coursesCreated?: Types.ObjectId[];
 }
@@ -39,6 +40,10 @@ const userSchema = new Schema<User>({
         enum: ["creator", "learner"],
         default: "learner",
         required: true
+    },
+    wallet: {
+        type: Number,
+        default: 0
     },
     coursesBought: [{
         type: mongoose.Schema.Types.ObjectId,
