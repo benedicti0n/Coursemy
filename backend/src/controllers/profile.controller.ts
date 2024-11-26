@@ -7,7 +7,7 @@ export const fetchProfileDetails = async (req: Request, res: Response): Promise<
     try {
         const userId = req._id;
 
-        const user = await User.findById(userId, 'profilePicture name username email role coursesBought coursesCreated')
+        const user = await User.findById(userId, 'profilePicture name username email role coursesBought coursesCreated wallet')
             .populate({
                 path: 'coursesCreated',
                 model: Course,
@@ -108,6 +108,25 @@ export const deleteAccount = async (req: Request, res: Response) => {
 
         }
 
+    } catch (error) {
+        res.status(500).json({ message: "Internal server error" })
+    }
+}
+
+export const addMoneyToWallet = async (req: Request, res: Response) => {
+    try {
+        const userId = req._id
+        const amountToAdd = req.body.moneyToAdd
+
+        const user = await User.findByIdAndUpdate(userId,
+            { $inc: { wallet: amountToAdd } },
+            { new: true }
+        )
+        if (!user) {
+            res.status(403).json({ message: "User not found" })
+        }
+
+        res.status(200).json({ message: "Money added sucessfully" })
     } catch (error) {
         res.status(500).json({ message: "Internal server error" })
     }

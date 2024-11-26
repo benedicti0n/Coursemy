@@ -6,6 +6,7 @@ import Button from '../../ui/Button';
 import checkToken from '../../util/checkToken';
 import EditProfileModal from './EditProfileModal';
 import ConfirmDelete from './ConfirmDelete';
+import Wallet from '../Wallet/Wallet';
 
 const serverUrl: string = import.meta.env.VITE_SERVER_URL || 'http://localhost:8080';
 
@@ -26,6 +27,7 @@ interface IUserDetails {
     username: string;
     email: string;
     role: 'creator' | 'learner';
+    wallet: number;
     coursesBought: string[];
     coursesCreated: ICourse[];
 }
@@ -39,6 +41,7 @@ const Profile: React.FC<ProfileProps> = ({ userDetails }) => {
     const [isCreator, setIsCreator] = useState<boolean>(false)
     const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false)
     const [isConfirmDeleteModalOpen, setIsConfirmDeleteModalOpen] = useState<boolean>(false)
+    const [isMoneyModalOpen, setIsMoneyModalOpen] = useState<boolean>(false)
 
     useEffect(() => {
         if (userDetails?.role === 'creator') {
@@ -118,6 +121,22 @@ const Profile: React.FC<ProfileProps> = ({ userDetails }) => {
                             isOpen={isConfirmDeleteModalOpen}
                             onClose={() => setIsConfirmDeleteModalOpen(false)}
                             userId={userDetails._id}
+                        />
+                    )}
+                </div>
+                <div className='flex w-full justify-end bg-white p-6 rounded-lg shadow-lg mt-10'>
+                    <h1 className="text-5xl font-bold text-black pr-4">{userDetails.wallet} ₹</h1>
+                    <Button
+                        variant='secondary'
+                        onClick={() => setIsMoneyModalOpen(true)}
+                    >
+                        Add Money
+                    </Button>
+
+                    {isMoneyModalOpen && (
+                        <Wallet
+                            isOpen={isMoneyModalOpen}
+                            onClose={() => setIsMoneyModalOpen(false)}
                         />
                     )}
                 </div>
