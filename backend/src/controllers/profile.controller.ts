@@ -1,4 +1,5 @@
 import { Request, Response } from "express"
+import mongoose from "mongoose";
 import User from "../models/user.model"
 import Course from '../models/course.model';
 
@@ -77,6 +78,36 @@ export const handleEditProfile = async (req: Request, res: Response): Promise<vo
             res.status(403).json({ message: "Couldnt change profile details" })
         }
         res.status(200).json(user)
+    } catch (error) {
+        res.status(500).json({ message: "Internal server error" })
+    }
+}
+
+export const deleteAccount = async (req: Request, res: Response) => {
+    try {
+        const userId = req._id
+        const session = await mongoose.startSession()
+
+        try {
+            session.startTransaction();
+
+            const user = await User.findById(userId).session(session)
+            if (!user) {
+                await session.abortTransaction();
+                res.status(403).json({ message: "User not found" })
+            }
+
+            await Course.deleteMany({ createdBy: userId }).session(session)
+
+            await User.deleteOne({ _id: userId }).session(session)
+
+            await session.commitTransaction()
+
+            res.status(200).json({ message: "User and Courses created by user deleted successfully" })
+        } catch (error) {
+
+        }
+
     } catch (error) {
         res.status(500).json({ message: "Internal server error" })
     }

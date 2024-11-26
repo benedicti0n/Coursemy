@@ -5,6 +5,7 @@ import CourseCard from '../Course/CourseCard';
 import Button from '../../ui/Button';
 import checkToken from '../../util/checkToken';
 import EditProfileModal from './EditProfileModal';
+import ConfirmDelete from './ConfirmDelete';
 
 const serverUrl: string = import.meta.env.VITE_SERVER_URL || 'http://localhost:8080';
 
@@ -38,6 +39,7 @@ const Profile: React.FC<ProfileProps> = ({ userDetails }) => {
     const navigate = useNavigate();
     const [isCreator, setIsCreator] = useState<boolean>(false)
     const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false)
+    const [isConfirmDeleteModalOpen, setIsConfirmDeleteModalOpen] = useState<boolean>(false)
 
     useEffect(() => {
         if (userDetails?.role === 'creator') {
@@ -107,9 +109,18 @@ const Profile: React.FC<ProfileProps> = ({ userDetails }) => {
                         />
                     )}
 
-                    <Button onClick={() => console.log('Delete Account Clicked')} variant="danger">
+                    <Button onClick={() => setIsConfirmDeleteModalOpen(true)} variant="danger"
+                    >
                         Delete Account
                     </Button>
+
+                    {isConfirmDeleteModalOpen && (
+                        <ConfirmDelete
+                            isOpen={isConfirmDeleteModalOpen}
+                            onClose={() => setIsConfirmDeleteModalOpen(false)}
+                            userId={userDetails._id}
+                        />
+                    )}
                 </div>
             </div>
 
