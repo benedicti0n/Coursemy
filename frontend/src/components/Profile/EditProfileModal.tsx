@@ -32,8 +32,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ isOpen, onClose, us
     if (!isOpen) return null;
 
     const refreshPage = () => {
-        //@ts-ignore
-        window.location.reload(true)
+        window.location.reload()
     }
 
     const onSave = async (data: FormValues) => {
