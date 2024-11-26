@@ -38,15 +38,12 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ isOpen, onClose, us
     const onSave = async (data: FormValues) => {
         try {
             const token = checkToken()
-            console.log("hi");
-
 
             const response = await axios.post(`${serverUrl}/api/v1/user/editProfile`, { data }, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             })
-
 
             if (!response) {
                 alert("Error changing profile details")
