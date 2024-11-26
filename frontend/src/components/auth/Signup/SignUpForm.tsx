@@ -153,7 +153,7 @@ const SignUpForm: React.FC = () => {
                 </div>
 
                 {/* Submit Button */}
-                <Button type="submit" className="w-full">
+                <Button type="submit">
                     Sign Up
                 </Button>
             </div>
