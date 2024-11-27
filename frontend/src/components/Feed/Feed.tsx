@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 import CourseCard from "../Course/CourseCard";
 
-const serverUrl: string = import.meta.env.VITE_SERVER_URL || "http://localhost:8080";
+const serverUrl: string = import.meta.env.VITE_SERVER_URL
 
 interface ICourseCard {
   _id: string;
