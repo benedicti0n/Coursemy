@@ -13,11 +13,14 @@ const app: Express = express()
 const PORT: string | number = process.env.PORT as string | number
 
 app.use(cors({
-    origin: process.env.CLIENT_URL,
+    origin: process.env.NODE_ENV === 'production'
+        ? 'https://coursemy-phi.vercel.app'
+        : 'http://localhost:5173',
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }))
+
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
