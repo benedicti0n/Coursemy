@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "node src/index.ts",
+    "start": "node src/index.js",
     "build": "tsc -b",
     "ts.check": "tsc --project tsconfig.json",
     "add-build": "git add dist",
