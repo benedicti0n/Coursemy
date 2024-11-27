@@ -43,7 +43,8 @@ const userSchema = new Schema<User>({
     },
     wallet: {
         type: Number,
-        default: 0
+        default: 0,
+        min: 0
     },
     coursesBought: [{
         type: mongoose.Schema.Types.ObjectId,
