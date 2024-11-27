@@ -4,7 +4,7 @@ import axios from 'axios';
 import checkToken from '../../util/checkToken';
 import { useNavigate } from 'react-router-dom';
 
-const serverUrl: string = import.meta.env.VITE_SERVER_URL || 'http://localhost:8080';
+const serverUrl: string = import.meta.env.VITE_SERVER_URL;
 
 interface IConfirmDeleteProps {
     isOpen: boolean;

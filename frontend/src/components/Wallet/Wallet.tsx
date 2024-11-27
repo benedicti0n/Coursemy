@@ -3,7 +3,7 @@ import Button from '../../ui/Button';
 import checkToken from '../../util/checkToken';
 import axios from 'axios';
 
-const serverUrl: string = import.meta.env.VITE_SERVER_URL || 'http://localhost:8080';
+const serverUrl: string = import.meta.env.VITE_SERVER_URL;
 
 interface IWallet {
     isOpen: boolean;

@@ -4,7 +4,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Button from "../../../ui/Button";
 
-const serverUrl: string = import.meta.env.SERVER_URL as string || "http://localhost:8080";
+const serverUrl: string = import.meta.env.SERVER_URL as string;
 
 interface FormData {
     name: string;

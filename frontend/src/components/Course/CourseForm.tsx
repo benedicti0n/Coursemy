@@ -4,7 +4,7 @@ import axios from 'axios';
 import checkToken from '../../util/checkToken';
 import Button from '../../ui/Button';
 
-const serverUrl: string = import.meta.env.VITE_SERVER_URL || 'http://localhost:8080';
+const serverUrl: string = import.meta.env.VITE_SERVER_URL;
 
 interface CourseData {
     name: string;

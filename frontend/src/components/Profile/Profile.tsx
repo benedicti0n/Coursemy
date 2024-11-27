@@ -8,7 +8,7 @@ import EditProfileModal from './EditProfileModal';
 import ConfirmDelete from './ConfirmDelete';
 import Wallet from '../Wallet/Wallet';
 
-const serverUrl: string = import.meta.env.VITE_SERVER_URL || 'http://localhost:8080';
+const serverUrl: string = import.meta.env.VITE_SERVER_URL;
 
 
 interface ICourse {

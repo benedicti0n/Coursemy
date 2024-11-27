@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import Button from "../../../ui/Button";
 
-const serverUrl: string = import.meta.env.VITE_SERVER_URL || "http://localhost:8080";
+const serverUrl: string = import.meta.env.VITE_SERVER_URL;
 
 interface FormData {
     username: string;
