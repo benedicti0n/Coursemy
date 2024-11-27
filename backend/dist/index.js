@@ -13,23 +13,15 @@ const course_routes_1 = __importDefault(require("./routes/course.routes"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const PORT = process.env.PORT;
+// Use CORS middleware once
 app.use((0, cors_1.default)({
     origin: process.env.NODE_ENV === 'production'
-        ? 'https://coursemy-phi.vercel.app'
+        ? 'https://coursemy-phi.vercel.app' // Frontend URL
         : 'http://localhost:5173',
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization']
+    allowedHeaders: ['Content-Type', 'Authorization'],
 }));
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', process.env.NODE_ENV === 'production'
-        ? 'https://coursemy-phi.vercel.app'
-        : 'http://localhost:5173');
-    res.header('Access-Control-Allow-Credentials', 'true');
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    next();
-});
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
 (0, connectDb_1.default)();

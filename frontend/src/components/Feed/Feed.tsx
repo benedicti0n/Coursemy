@@ -17,7 +17,7 @@ interface ICourseCard {
 }
 
 const Feed: React.FC = () => {
-  const [allCourses, setAllCourses] = useState<ICourseCard[] | null>(null);
+  const [allCourses, setAllCourses] = useState<ICourseCard[]>([]);
 
   const navigate = useNavigate();
 
@@ -25,7 +25,8 @@ const Feed: React.FC = () => {
     const fetchCourses = async () => {
       try {
         const response = await axios.get(`${serverUrl}/api/v1/course/feed`);
-        setAllCourses(response.data);
+        const data = response.data
+        setAllCourses(data);
       } catch (error) {
         console.error("Failed to fetch courses:", error);
       }
@@ -43,7 +44,7 @@ const Feed: React.FC = () => {
   return (
     <div className="p-8 bg-white min-h-screen">
       <h2 className="text-3xl font-semibold text-gray-800 mb-6">Available Courses</h2>
-      {allCourses ? (
+      {Array.isArray(allCourses) && allCourses.length > 0 ? (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {allCourses.map((course) => (
             <CourseCard
@@ -59,8 +60,9 @@ const Feed: React.FC = () => {
           ))}
         </div>
       ) : (
-        <div className="text-center text-gray-600 mt-12">Loading courses...</div>
+        <div className="text-center text-gray-600 mt-12">No courses available...</div>
       )}
+
     </div>
   );
 };

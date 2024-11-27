@@ -40,15 +40,21 @@ export const createCourse = async (req: Request, res: Response) => {
     }
 }
 
-export const getAllCourses = async (req: Request, res: Response) => {
+export const getAllCourses = async (req: Request, res: Response): Promise<void> => {
     try {
-        const allCourses = await Course.find({}, "_id name bannerPicture description price totalSold")
+        const allCourses = await Course.find({}, "_id name bannerPicture description price totalSold");
 
-        res.status(200).json(allCourses)
+        if (!allCourses || allCourses.length === 0) {
+            res.status(200).json([]);
+            return
+        }
+
+        res.status(200).json(allCourses);
     } catch (error) {
         console.error(error);
+        res.status(500).json({ message: "Failed to fetch courses" });
     }
-}
+};
 
 export const fetchCourseDetails = async (req: Request, res: Response) => {
     const { courseId } = req.params

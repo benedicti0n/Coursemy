@@ -5,14 +5,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const multer_1 = __importDefault(require("multer"));
+const fs_1 = __importDefault(require("fs"));
 const creator_middleware_1 = __importDefault(require("../middlewares/creator.middleware"));
 const login_middleware_1 = __importDefault(require("../middlewares/login.middleware"));
 const course_controller_1 = require("../controllers/course.controller");
 const router = (0, express_1.Router)();
+const uploadPath = '/tmp/uploads';
+if (!fs_1.default.existsSync(uploadPath)) {
+    fs_1.default.mkdirSync(uploadPath, { recursive: true });
+}
 const upload = (0, multer_1.default)({
-    dest: "/temp/uploads/",
+    dest: uploadPath,
     limits: {
-        fileSize: 5 * 1024 * 1024
+        fileSize: 5 * 1024 * 1024 // 5MB
     }
 });
 router.post("/createCourse", upload.single("bannerPicture"), login_middleware_1.default, creator_middleware_1.default, course_controller_1.createCourse);

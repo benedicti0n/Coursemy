@@ -1,16 +1,23 @@
 import { Router } from "express"
 import multer from "multer"
+import fs from "fs"
 import isCreator from "../middlewares/creator.middleware"
 import verifyToken from "../middlewares/login.middleware"
 import { createCourse, getAllCourses, fetchCourseDetails, buyCourse } from "../controllers/course.controller"
 
 const router = Router()
+const uploadPath = '/tmp/uploads';
+
+if (!fs.existsSync(uploadPath)) {
+    fs.mkdirSync(uploadPath, { recursive: true });
+}
+
 const upload = multer({
-    dest: "/temp/uploads/",
+    dest: uploadPath,
     limits: {
-        fileSize: 5 * 1024 * 1024
+        fileSize: 5 * 1024 * 1024 // 5MB
     }
-})
+});
 
 router.post("/createCourse", upload.single("bannerPicture"), verifyToken, isCreator, createCourse)
 router.get("/feed", getAllCourses)
