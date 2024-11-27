@@ -1,6 +1,8 @@
 import axios, { AxiosError } from 'axios';
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import Button from '../../ui/Button';
+import checkToken from '../../util/checkToken';
 
 const serverUrl: string = import.meta.env.VITE_SERVER_URL || "http://localhost:8080";
 
@@ -21,6 +23,7 @@ interface ICourseDetails {
 const Course: React.FC = () => {
     const [courseDetails, setCourseDetails] = useState<ICourseDetails | null>(null);
     const [error, setError] = useState<AxiosError | null>(null)
+    const navigate = useNavigate()
     const { courseId } = useParams();
 
     useEffect(() => {
@@ -28,11 +31,8 @@ const Course: React.FC = () => {
             try {
                 const response = await axios.get(`${serverUrl}/api/v1/course/${courseId}`);
                 const data: ICourseDetails = response.data;
-                console.log(data);
 
                 setCourseDetails(data);
-                console.log("this is courseDetails: " + courseDetails);
-
             } catch (e) {
                 if (axios.isAxiosError(e)) {
                     setError(e)
@@ -45,6 +45,38 @@ const Course: React.FC = () => {
 
         fetchCourseDetails();
     }, [courseId]);
+
+    const buyCourse = async () => {
+        try {
+            const token = checkToken();
+
+            const response = await axios.post(
+                `${serverUrl}/api/v1/course/enroll`,
+                { courseId },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            if (!response) {
+                alert("Error buying course");
+                return;
+            }
+
+            navigate("/learnings");
+        } catch (error) {
+            if (axios.isAxiosError(error) && error.response) {
+                const backendMessage = error.response.data?.message || "Something went wrong!";
+                alert(backendMessage);
+            } else {
+                console.error("Unexpected error:", error);
+                alert("Unexpected error occurred.");
+            }
+        }
+
+    }
 
     return (
         <div className='min-h-screen bg-white'>
@@ -107,9 +139,12 @@ const Course: React.FC = () => {
                                     <div className="text-3xl font-bold text-black mb-6">
                                         ${courseDetails?.price}
                                     </div>
-                                    <button className="w-full px-6 py-3 bg-black text-white font-medium rounded-md hover:bg-gray-800 transition-colors duration-200">
+                                    <Button
+                                        variant='secondary'
+                                        onClick={buyCourse}
+                                    >
                                         Enroll Now
-                                    </button>
+                                    </Button>
                                     <div className="mt-6 pt-6 border-t border-gray-200">
                                         <h3 className="text-lg font-semibold text-black mb-4">What you'll get:</h3>
                                         <ul className="space-y-3 text-gray-600">

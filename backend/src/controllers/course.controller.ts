@@ -56,8 +56,6 @@ export const fetchCourseDetails = async (req: Request, res: Response) => {
     try {
         const course = await Course.findById(courseId).populate('createdBy', 'name')
 
-        console.log(course);
-
         if (!course) {
             res.status(404).json({ message: "Couldn't fetch course details" })
         }
@@ -65,7 +63,56 @@ export const fetchCourseDetails = async (req: Request, res: Response) => {
         res.status(200).send(course)
     } catch (error) {
         res.status(500).json({ message: "Internal Server error" })
-        console.log("hi");
-
     }
 }
+
+export const buyCourse = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const userId = req._id;
+        const { courseId } = req.body;
+        console.log(courseId);
+
+
+        const [course, user] = await Promise.all([
+            Course.findById(courseId).lean(),
+            User.findById(userId).lean()
+        ]);
+
+        if (!course) {
+            res.status(404).json({ message: "Course not found." });
+            return
+        }
+
+        if (!user) {
+            res.status(404).json({ message: "User not found." });
+            return
+        }
+
+        if (user.coursesBought!.some((boughtCourseId) => boughtCourseId.toString() === courseId)) {
+            res.status(400).json({ message: "Course already purchased." });
+            return;
+        }
+
+        const coursePrice = course?.price as number;
+        const userBalance = user?.wallet as number;
+
+        if (userBalance < coursePrice) {
+            res.status(403).json({ message: "Insufficient balance." });
+            return
+        }
+
+        await User.findByIdAndUpdate(
+            userId,
+            {
+                $push: { coursesBought: courseId },
+                $inc: { wallet: -coursePrice },
+            },
+            { new: true }
+        );
+
+        res.status(200).json({ message: "Course bought successfully." });
+    } catch (error) {
+        console.error("Error buying course:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+};
