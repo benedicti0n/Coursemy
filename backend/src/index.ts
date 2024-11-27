@@ -10,7 +10,7 @@ import courseRoutes from "./routes/course.routes";
 dotenv.config();
 
 const app: Express = express();
-const PORT: string | number = process.env.PORT;
+const PORT: string | unknown = process.env.PORT
 
 // Use CORS middleware once
 app.use(cors({
