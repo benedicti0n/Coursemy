@@ -79,7 +79,7 @@ const Course: React.FC = () => {
     }
 
     return (
-        <div className='min-h-screen bg-white'>
+        <div className='min-h-screen w-full bg-white'>
             {courseDetails ? (
                 <div className="min-h-screen bg-white">
                     {/* Banner Section */}

@@ -35,7 +35,7 @@ const LoginForm: React.FC<ILoginFormProps> = ({ onLoginSuccess }) => {
             onSubmit={onSubmit}
             className="max-w-md mx-auto mt-8 p-6 bg-white rounded-lg shadow-md"
         >
-            <div className="space-y-4">
+            <div className="space-y-4 flex flex-col items-center">
                 <input
                     {...register("username")}
                     placeholder="Username"
@@ -47,7 +47,10 @@ const LoginForm: React.FC<ILoginFormProps> = ({ onLoginSuccess }) => {
                     placeholder="Password"
                     className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
                 />
-                <Button type="submit">
+                <Button
+                    type="submit"
+                    variant="secondary"
+                >
                     Login
                 </Button>
             </div>

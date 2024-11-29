@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 import axios from 'axios';
 import checkToken from './util/checkToken';
 
@@ -92,7 +92,7 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen w-full bg-gray-50 flex justify-center items-center relative">
       <Navbar isAuthenticated={isAuthenticated} profilePicture={profilePicture} onLogout={handleLogout} />
 
       <Routes>
@@ -100,12 +100,17 @@ function App() {
         <Route path="/signup" element={<SignUpForm />} />
         <Route path="/login" element={<LoginForm onLoginSuccess={handleLogin} />} />
         <Route path="/feed" element={<Feed />} />
-        <Route path="/createCourse" element={<CourseForm />} />
         <Route path="/course/:courseId" element={<Course />} />
+
+        {isAuthenticated && (
+          <Route path="/createCourse" element={<CourseForm />} />
+        )}
         {isAuthenticated && (
           <Route path="/profile" element={<Profile userDetails={userDetails} />} />
         )}
-        <Route path="/learnings" element={<MyLearning />} />
+        {isAuthenticated && (
+          <Route path="/learnings" element={<MyLearning />} />
+        )}
       </Routes>
     </div>
   );

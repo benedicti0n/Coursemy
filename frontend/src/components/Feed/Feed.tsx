@@ -41,7 +41,7 @@ const Feed: React.FC = () => {
   };
 
   return (
-    <div className="p-8 bg-white min-h-screen">
+    <div className="p-8 bg-white min-h-screen w-full pt-28">
       <h2 className="text-3xl font-semibold text-gray-800 mb-6">Available Courses</h2>
       {Array.isArray(allCourses) && allCourses.length > 0 ? (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">

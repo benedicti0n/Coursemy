@@ -52,7 +52,7 @@ const MyLearning = () => {
     };
 
     return (
-        <div className="p-8 bg-white min-h-screen">
+        <div className="p-8 bg-white min-h-screen pt-28">
             <h2 className="text-3xl font-semibold text-gray-800 mb-6">Available Courses</h2>
             {boughtCourses ? (
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">

@@ -84,7 +84,7 @@ const Profile: React.FC<ProfileProps> = ({ userDetails }) => {
     };
 
     return (
-        <div className="p-8 bg-gray-100 min-h-screen flex flex-col items-center">
+        <div className="p-8 bg-gray-100 min-h-screen w-full flex flex-col items-center relative pt-28">
             {/* Profile Header */}
             <div className="flex flex-col items-center mb-10">
                 <img

@@ -56,7 +56,7 @@ const SignUpForm: React.FC = () => {
             onSubmit={onSubmit}
             className="max-w-md mx-auto mt-8 p-6 bg-white rounded-lg shadow-md"
         >
-            <div className="space-y-4">
+            <div className="space-y-4 flex flex-col items-center">
                 {/* Text Inputs */}
                 <input
                     {...register("name")}
@@ -153,7 +153,10 @@ const SignUpForm: React.FC = () => {
                 </div>
 
                 {/* Submit Button */}
-                <Button type="submit">
+                <Button
+                    type="submit"
+                    variant="secondary"
+                >
                     Sign Up
                 </Button>
             </div>
