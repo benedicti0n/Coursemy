@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FiLogOut, FiUser, FiBookOpen, FiMenu, FiX, FiBook } from 'react-icons/fi';
+import { FiLogOut, FiUser, FiBookOpen, FiMenu, FiX } from 'react-icons/fi';
 import Button from '../../ui/Button';
 
 interface NavbarProps {
