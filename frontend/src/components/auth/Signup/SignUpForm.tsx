@@ -4,7 +4,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Button from "../../../ui/Button";
 
-const serverUrl: string = import.meta.env.SERVER_URL as string;
+const serverUrl = import.meta.env.VITE_SERVER_URL as string;
 
 interface FormData {
     name: string;
@@ -20,6 +20,8 @@ const SignUpForm: React.FC = () => {
     const [selectedImagePreview, setSelectedImagePreview] = useState<string>("");
 
     const navigate = useNavigate();
+    console.log(serverUrl);
+
 
     const onSubmit = handleSubmit(async (data) => {
         const formData = new FormData();
