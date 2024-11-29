@@ -9,19 +9,19 @@ interface cloudinaryConfig {
     api_secret: string;
 }
 
-// console.log(process.env.CLOUD_NAME);
-// console.log(process.env.API_KEY);
-// console.log(process.env.API_SECRET);
+const cloudName = process.env.CLOUD_NAME as string
+const apiKey = process.env.API_KEY as string
+const apiSecret = process.env.API_SECRET as string
 
 
-if (!process.env.CLOUD_NAME || !process.env.API_KEY || process.env.API_SECRET) {
+if (!cloudName || !apiKey || !apiSecret) {
     console.log("Cloudinary Credentials error");
 }
 
 cloudinary.config({
-    cloud_name: process.env.CLOUD_NAME!,
-    api_key: process.env.API_KEY!,
-    api_secret: process.env.API_SECRET!,
+    cloud_name: cloudName,
+    api_key: apiKey,
+    api_secret: apiSecret,
 } as cloudinaryConfig)
 
 export default cloudinary
