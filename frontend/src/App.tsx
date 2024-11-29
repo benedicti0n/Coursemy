@@ -10,6 +10,7 @@ import HomePage from './components/Homepage/Homepage';
 import Feed from './components/Feed/Feed';
 import Course from './components/Course/Course';
 import Profile from './components/Profile/Profile';
+import CreatorProfile from './components/Profile/CreatorProfile';
 import CourseForm from './components/Course/CourseForm';
 import MyLearning from './components/MyLearning/MyLearning';
 
@@ -101,6 +102,7 @@ function App() {
         <Route path="/login" element={<LoginForm onLoginSuccess={handleLogin} />} />
         <Route path="/feed" element={<Feed />} />
         <Route path="/course/:courseId" element={<Course />} />
+        <Route path="/profile/:creatorId" element={<CreatorProfile />} />
 
         {isAuthenticated && (
           <Route path="/createCourse" element={<CourseForm />} />

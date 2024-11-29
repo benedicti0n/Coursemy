@@ -131,3 +131,21 @@ export const addMoneyToWallet = async (req: Request, res: Response) => {
         res.status(500).json({ message: "Internal server error" })
     }
 }
+
+export const fetchCreatorDetails = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { creatorId } = req.body
+        console.log(creatorId);
+
+        const creator = await User.findById(creatorId, "_id profilePicture name username email coursesCreated").populate("coursesCreated", "_id bannerPicture name description totalSold price")
+
+        if (!creator) {
+            res.status(403).json({ message: "Creator not found" })
+            return
+        }
+
+        res.status(200).json(creator)
+    } catch (error) {
+        res.status(500).json({ message: "Internal server error" })
+    }
+}

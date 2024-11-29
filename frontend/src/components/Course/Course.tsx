@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import axios, { AxiosError } from 'axios';
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -25,14 +26,17 @@ const Course: React.FC = () => {
     const [error, setError] = useState<AxiosError | null>(null)
     const navigate = useNavigate()
     const { courseId } = useParams();
+    const [creatorId, setCreatorId] = useState<string | null>()
 
     useEffect(() => {
         const fetchCourseDetails = async () => {
             try {
                 const response = await axios.get(`${serverUrl}/api/v1/course/${courseId}`);
                 const data: ICourseDetails = response.data;
+                const creatorIdFromData = data.createdBy._id
 
                 setCourseDetails(data);
+                setCreatorId(creatorIdFromData)
             } catch (e) {
                 if (axios.isAxiosError(e)) {
                     setError(e)
@@ -94,7 +98,11 @@ const Course: React.FC = () => {
                             <div className="max-w-5xl mx-auto">
                                 <h1 className="text-5xl font-extrabold mb-4">{courseDetails.name}</h1>
                                 <div className="flex items-center space-x-4">
-                                    <span className="text-lg">By {courseDetails?.createdBy.name}</span>
+                                    <Link
+                                        to={`/profile/${creatorId}`}
+                                    >
+                                        <span className="text-lg">By {courseDetails?.createdBy.name}</span>
+                                    </Link>
                                     <span className="text-lg">•</span>
                                     <span className="text-lg">{courseDetails?.totalSold} students enrolled</span>
                                 </div>
